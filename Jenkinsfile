@@ -20,12 +20,7 @@ pipeline {
                 sh "terraform plan -var-file=environments/${params.ENVIRONMENT}.tfvars"
             }
         }
-        #stage('executing terraform paln') {
-        #    steps {
-        #        sh 'terraform plan'
-   # }
-#}
-
+       
         stage('Terraform Apply') {
             steps {
                 sh "terraform apply -var-file=environments/${params.ENVIRONMENT}.tfvars -auto-approve"
