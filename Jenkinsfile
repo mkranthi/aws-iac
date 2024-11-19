@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage ('checkout') {
             steps {
-                git branch: 'develop', url: 'https://github.com/mkranthi/aws-iac.git'
+                git branch: 'feature', url: 'https://github.com/mkranthi/aws-iac.git'
             }
         }
         stage('executing terraform init') {
