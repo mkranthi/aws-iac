@@ -10,6 +10,13 @@ pipeline {
                 git branch: 'feature', url: 'https://github.com/mkranthi/aws-iac.git'
             }
         }
+
+        stage('Clean Workspace') {
+    steps {
+        sh 'rm -rf .terraform'
+    }
+}
+
         stage('executing terraform init') {
             steps {
                 sh 'terraform init'
