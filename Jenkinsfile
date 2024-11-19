@@ -24,13 +24,13 @@ pipeline {
 }
         stage('Terraform Plan') {
             steps {
-                sh "terraform plan -var-file=environments/${params.ENVIRONMENT}.tfvars"
+                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
             }
         }
        
         stage('Terraform Apply') {
             steps {
-                sh "terraform apply -var-file=environments/${params.ENVIRONMENT}.tfvars -auto-approve"
+                sh "terraform apply -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
             }
         }
 }
