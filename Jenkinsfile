@@ -25,7 +25,7 @@ pipeline {
 
         stage('executing terraform apply') {
             steps {
-                sh 'terraform terraform destroy -auto-approve'
+                sh 'terraform destroy -auto-approve'
     }
 }       
 }
