@@ -1,6 +1,10 @@
 
 pipeline {
     agent any 
+
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+    }
     stages {
         stage ('checkout') {
             steps {
@@ -12,21 +16,16 @@ pipeline {
                 sh 'terraform init'
     }
 }
-        stage('executing terraform refresh') {
+        stage('Terraform Plan') {
             steps {
-                sh 'terraform refresh'
-    }
-}
-        stage('executing terraform paln') {
+                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+            }
+        }
+        stage('Terraform Apply') {
             steps {
-                sh 'terraform plan'
-    }
-}
-
-        stage('executing terraform apply') {
-            steps {
-                sh 'terraform destroy -auto-approve'
-    }
-}       
+                sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
+            }
+        }
+              
 }
 }
