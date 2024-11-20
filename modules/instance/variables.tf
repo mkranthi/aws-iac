@@ -52,7 +52,7 @@ variable "av_zone" {
   default     = "us-east-2a"
 }
 
-variable "instance_profile" {
+variable "instance_profile_name" {
   description = "IAM instance profile name"
   type        = string
   default     = "default-instance-profile"
