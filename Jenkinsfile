@@ -11,11 +11,6 @@ pipeline {
             }
         }
 
-        stage('Clean Workspace') {
-    steps {
-        sh 'rm -rf .terraform'
-    }
-}
 
         stage('executing terraform init') {
             steps {
@@ -30,7 +25,7 @@ pipeline {
        
         stage('Terraform Apply') {
             steps {
-                sh "terraform apply -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
+                sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
             }
         }
 }
