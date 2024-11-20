@@ -5,7 +5,7 @@ output "iam_role_name" {
 
 output "instance_profile_name" {
   description = "The name of the instance profile"
-  value       = aws_iam_instance_profile.instance_profile.name
+  value       = data.aws_iam_instance_profile.existing_instance_profile.name
 }
 
 output "security_group_id" {
