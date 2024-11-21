@@ -1,44 +1,61 @@
 pipeline {
     agent any
+
     parameters {
-        // Git Parameter for branch selection
-        gitParameter(
-            name: 'BRANCH', 
-            branchFilter: 'origin/(.*)',  // Regex to match all branches
-            defaultValue: 'main',  // Default branch
-            type: 'PT_BRANCH',  // Parameter Type: Branch
-            description: 'Select the branch to build from',
-            useRepository: 'https://github.com/mkranthi/aws-iac.git'  // Git Repository URL
-        )
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        // Parameter to select the branch
+        choice(name: 'BRANCH', choices: ['feature-init', 'main', 'develop'], description: 'Select the branch to deploy')
+        
+        // Parameter to select the environment
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod', 'staging'], description: 'Select the environment for deployment')
     }
+
     stages {
         stage('Checkout') {
             steps {
                 script {
                     // Checkout the selected branch
                     echo "Checking out branch: ${params.BRANCH}"
-                    git branch: "${params.BRANCH}", url: 'https://github.com/mkranthi/aws-iac.git'
+                    checkout scm
+                    sh "git checkout ${params.BRANCH}"
                 }
             }
         }
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init -migrate-state'
+                script {
+                    echo "Initializing Terraform..."
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+                script {
+                    // Pass environment-specific variables file
+                    def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
+                    echo "Running Terraform Plan with ${tfVarsFile}..."
+                    sh "terraform plan -var-file=${tfVarsFile}"
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                sh "terraform apply -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
+                script {
+                    def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
+                    echo "Running Terraform Apply with ${tfVarsFile}..."
+                    sh "terraform apply -var-file=${tfVarsFile} -auto-approve"
+                }
             }
+        }
+    }
+
+    post {
+        always {
+            echo "Cleaning up..."
+            // Any cleanup or notifications can go here
         }
     }
 }
