@@ -10,9 +10,6 @@ pipeline {
             description: 'Select the branch to build from',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'  // Git Repository URL
         )
-
-        // Choice Parameter for selecting environment
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
     }
     stages {
         stage('Checkout') {
