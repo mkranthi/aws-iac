@@ -1,85 +1,46 @@
+
 pipeline {
-  agent any
-  parameters {
-    choice(name: 'select_environment', choices: ['dev', 'test', 'prod','dev1'], description: 'Choose one')
-    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'BRANCH', type: 'PT_BRANCH', useRepository: '.*Application.git'
-   /// environment {
-      //develop= 'develop'
-      //test='test'
-      //prod='prod'
-     //}
-  }
-  stages {
-    stage('Example') {
-      steps {
-         echo "Branch Choice: ${params.select_environment}"
-        git branch: "${params.BRANCH}", url: 'https://github.com/mkranthi/Application.git'
-      }
+    agent any
+    parameters {
+        // Git Parameter for branch selection
+        gitParameter(
+            name: 'BRANCH',
+            branchFilter: 'origin/(.*)',  // Regex to match branches
+            defaultValue: 'master',  // Default branch
+            type: 'PT_BRANCH',  // Parameter Type: Branch
+            description: 'Select the branch to build from'
+        )
+        
+        // Choice Parameter for selecting environment
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
     }
-    stage('selcet environment'){
-        steps{
-            script{
-            if (env.select_environment == 'dev1'){
-                echo ' hello from dev1 '
+    stages {
+        stage('Checkout') {
+            steps {
                 script {
-                    sh '''
-                    #!/bin/bash
-                    config=$(jq '.dev1.ip' config.json | sed 's/"//g')
-                    echo $config
-                    ssh -i /tmp/id_rsa ec2-user@$config -o StrictHostKeyChecking=no << EOF
-                    touch samplefile
-                    exit 0
-                    << EOF
-                    '''
-                }
-            }                      
-            if (env.select_environment == 'dev'){
-                echo ' hello from dev'
-                script {
-                    sh '''
-                    #!/bin/bash
-                    config=$(jq '.dev1.ip' config.json | sed 's/"//g')
-                    echo $config
-                    ssh -i /tmp/id_rsa ec2-user@$config -o StrictHostKeyChecking=no << EOF
-                    touch dev1.ip
-                    exit 0
-                    << EOF
-                    '''
+                    // Checkout the selected branch
+                    echo "Checking out branch: ${params.BRANCH}"
+                    git branch: "${params.BRANCH}", url: 'https://github.com/mkranthi/aws-iac.git'
                 }
             }
-            if (env.select_environment == 'test'){
-                echo ' hello from dev'
-                script {
-                    sh '''
-                    #!/bin/bash
-                    config=$(jq '.test.ip' config.json | sed 's/"//g')
-                    echo $config
-                    ssh -i /tmp/id_rsa ec2-user@$config -o StrictHostKeyChecking=no << EOF
-                    touch sampletestfile
-                    exit 0
-                    << EOF
-                    '''
-                }
-            }
-            if (env.select_environment == 'prod'){
-                echo ' hello from dev'
-                script {
-                    sh '''
-                    #!/bin/bash
-                    config=$(jq '.prod.ip' config.json | sed 's/"//g')
-                    echo $config
-                    ssh -i /tmp/id_rsa ec2-user@$config -o StrictHostKeyChecking=no << EOF
-                    touch prodfile
-                    exit 0
-                    << EOF
-                    '''
-                }
-            }
-            else {
-                        sh "echo 'Hello from ${env.BRANCH_NAME} branch!'"
-                        }
-        }     
-    }
         }
-  }
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init -migrate-state'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh "terraform apply -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
+            }
+        }
+    }
 }
