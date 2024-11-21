@@ -8,6 +8,7 @@ pipeline {
             branchFilter: 'origin/(.*)',  // Regex to match branches
             defaultValue: 'develop',  // Default branch
             type: 'PT_BRANCH',  // Parameter Type: Branch
+            useRepository: 'https://github.com/mkranthi/aws-iac.git',
             description: 'Select the branch to build from'
         )
         
