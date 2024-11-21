@@ -1,22 +1,35 @@
-
 pipeline {
     agent any 
     parameters {
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        
+        // Git Parameter for selecting a branch
+        gitParameter(
+            name: 'BRANCH', 
+            branchFilter: 'origin/(.*)', 
+            defaultValue: 'feature', 
+            type: 'PT_BRANCH', 
+            description: 'Select the branch to build from'
+        )
+           // Choice Parameter for selecting environment
+           choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
     }
     stages {
         stage ('checkout') {
             steps {
-                git branch: 'feature', url: 'https://github.com/mkranthi/aws-iac.git'
+                script {
+                    // Checkout the selected Git branch
+                    echo "Checking out branch: ${params.BRANCH}"
+                    git branch: "${params.BRANCH}", url: 'https://github.com/mkranthi/aws-iac.git'
+                }
             }
         }
 
-
         stage('executing terraform init') {
             steps {
-                sh 'terraform init -migrate-state ' 
-    }
-}
+                sh 'terraform init -migrate-state' 
+            }
+        }
+
         stage('Terraform Plan') {
             steps {
                 sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
@@ -28,5 +41,6 @@ pipeline {
                 sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
             }
         }
+    }
 }
-}
+
