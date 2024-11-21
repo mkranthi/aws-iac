@@ -6,7 +6,7 @@ pipeline {
         gitParameter(
             name: 'BRANCH',
             branchFilter: 'origin/(.*)',  // Regex to match branches
-            defaultValue: 'master',  // Default branch
+            defaultValue: 'develop',  // Default branch
             type: 'PT_BRANCH',  // Parameter Type: Branch
             description: 'Select the branch to build from'
         )
