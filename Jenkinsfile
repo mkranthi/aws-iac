@@ -3,14 +3,14 @@ pipeline {
     parameters {
         // Git Parameter for branch selection
         gitParameter(
-            name: 'BRANCH',
-            branchFilter: 'origin/(.*)', // Regex to match branches
-            defaultValue: 'develop', // Default branch
-            type: 'PT_BRANCH', // Parameter Type: Branch
+            name: 'BRANCH', 
+            branchFilter: 'origin/(.*)',  // Regex to match all branches
+            defaultValue: 'main',  // Default branch
+            type: 'PT_BRANCH',  // Parameter Type: Branch
             description: 'Select the branch to build from',
-            useRepository: 'https://github.com/mkranthi/aws-iac.git' 
+            useRepository: 'https://github.com/mkranthi/aws-iac.git'  // Git Repository URL
         )
-        
+
         // Choice Parameter for selecting environment
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
     }
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Checkout the selected branch
-                    echo "Selected branch: ${params.BRANCH}"
+                    echo "Checking out branch: ${params.BRANCH}"
                     git branch: "${params.BRANCH}", url: 'https://github.com/mkranthi/aws-iac.git'
                 }
             }
