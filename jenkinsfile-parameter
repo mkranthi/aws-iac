@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage ('checkout') {
             steps {
-                sh 'git checkout ${params.BRANCH}'
+                sh "git checkout ${params.BRANCH}"
             }
         }
         stage('Executing terraform init') {
