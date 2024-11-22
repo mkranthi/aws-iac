@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
-        string (name: 'BRANCH', choices: ['develop', 'feature','feature-init'], description: 'Choose Branch')
+        choice (name: 'BRANCH', choices: ['develop', 'feature','feature-init'], description: 'Choose Branch')
     }
     stages {
         stage ('checkout') {
