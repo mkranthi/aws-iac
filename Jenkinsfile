@@ -3,10 +3,10 @@ pipeline {
 
     parameters {
         // Parameter to select the branch
-        choice(name: 'BRANCH', choices: ['feature-init', 'main', 'develop'], description: 'Select the branch to deploy')
+        choice(name: 'BRANCH', choices: ['feature-init', 'main', 'feature''develop'], description: 'Select the branch to deploy')
         
         // Parameter to select the environment
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod', 'staging'], description: 'Select the environment for deployment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod', 'dev1'], description: 'Select the environment for deployment')
     }
 
     stages {
