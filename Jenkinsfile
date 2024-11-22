@@ -51,11 +51,3 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            echo "Cleaning up..."
-            // Any cleanup or notifications can go here
-        }
-    }
-}
