@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     echo "Initializing Terraform..."
-                    sh 'terraform init'
+                    sh 'terraform init -reconfigure'
                 }
             }
         }
@@ -46,7 +46,8 @@ pipeline {
                 script {
                     def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
                     echo "Running Terraform Apply with ${tfVarsFile}..."
-                    sh "terraform destroy -var-file=${tfVarsFile} -auto-approve"
+                    sh "terraform apply -var-file=${tfVarsFile} -state=${tfVarsFile}.tfvars -auto-approve"
+                    
                 }
             }
         }
