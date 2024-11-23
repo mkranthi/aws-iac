@@ -46,7 +46,7 @@ pipeline {
                 script {
                     def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
                     echo "Running Terraform Apply with ${tfVarsFile}..."
-                    sh "terraform apply -var-file=${tfVarsFile} -state=${tfVarsFile}.tfvars -auto-approve"
+                    sh "terraform destroy -var-file=${tfVarsFile} -state=${tfVarsFile}.tfvars -auto-approve"
                     
                 }
             }
