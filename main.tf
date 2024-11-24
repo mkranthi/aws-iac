@@ -21,6 +21,5 @@ module "ec2" {
     instance_type = var.instance_type
     ami = var.ami 
     key_name = var.key_name
-    instance_profile_name = var.instance_profile_name
-    
+    instance_profile = var.instance_profile
 }
