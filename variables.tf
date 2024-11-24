@@ -56,3 +56,7 @@ variable "av_zone" {
   description = "The availability zone for the resources"
   type        = string
 }
+variable "ENVIRONMENT" {
+  description = "The availability zone for the resources"
+  type        = string
+}
