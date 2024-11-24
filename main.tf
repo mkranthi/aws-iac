@@ -21,7 +21,6 @@ module "ec2" {
     instance_type = var.instance_type
     ami = var.ami 
     key_name = var.key_name
-    instance_profile_name = "default-instance-profile"
+    instance_profile_name = var.instance_profile_name
     
 }
-
