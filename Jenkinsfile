@@ -21,11 +21,21 @@ pipeline {
             }
         }
 
+        stage('Set Terraform Variables') {
+            steps {
+                sh '''
+                
+                export TF_VAR_ENVIRONMENT="${ENVIRONMENT}"
+                
+                '''
+            }
+        }
+
         stage('Terraform Init') {
             steps {
                 script {
                     echo "Initializing Terraform..."
-                    sh 'terraform init -reconfigure'
+                    sh 'terraform init -migrate-state'
                 }
             }
         }
@@ -36,7 +46,7 @@ pipeline {
                     // Pass environment-specific variables file
                     def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
                     echo "Running Terraform Plan with ${tfVarsFile}..."
-                    sh "terraform plan -var-file=${tfVarsFile}"
+                    sh "terraform plan -out=plan.out"
                 }
             }
         }
@@ -46,7 +56,7 @@ pipeline {
                 script {
                     def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
                     echo "Running Terraform Apply with ${tfVarsFile}..."
-                    sh "terraform destroy -var-file=${tfVarsFile} -state=${tfVarsFile}.tfvars -auto-approve"
+                    sh "terraform apply -auto-approve -out=plan.out"
                     
                 }
             }
