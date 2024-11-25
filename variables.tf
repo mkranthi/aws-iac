@@ -28,11 +28,6 @@ variable "role_name" {
   type        = string
 }
 
-variable "instance_name" {
-  description = "Name tag for the EC2 instance"
-  type        = string
-}
-
 variable "instance_type" {
   description = "Type of the EC2 instance"
   type        = string
