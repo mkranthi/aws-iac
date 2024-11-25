@@ -43,7 +43,7 @@ resource "aws_instance" "terraform_instance" {
   key_name               = var.key_name
   availability_zone      = var.av_zone
   vpc_security_group_ids = [aws_security_group.terraform_sg.id]
-  iam_instance_profile   = "default-instance-profile"
+  iam_instance_profile_name   = "default-instance-profile"
 
   tags = {
     Name = var.instance_name

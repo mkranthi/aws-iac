@@ -2,13 +2,13 @@ provider "aws" {
   region = "us-east-2"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "kranti-terraform-statefile"
-    key    = "terraform/${var.ENVIRONMENT}/terraform.tfstate"
-    region = "us-east-2"
-  }
-}
+#terraform {
+ # backend "s3" {
+  #  bucket = "kranti-terraform-statefile"
+  #  key    = "terraform/${var.ENVIRONMENT}/terraform.tfstate"
+  #  region = "us-east-2"
+ # }
+#}
 
 module "ec2" {
   source = "./modules/instance"
