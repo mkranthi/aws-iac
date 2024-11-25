@@ -41,7 +41,7 @@ data "aws_iam_role" "existing_role" {
 }
 
 data "aws_iam_instance_profile" "existing_instance_profile" {
-  name = var.instance_profile_name
+  name = var.instance_profile
 }
 
 # EC2 instance creation

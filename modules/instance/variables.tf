@@ -43,7 +43,7 @@ variable "key_name" {
   type        = string
 }
 
-variable "instance_profile_name" {
+variable "instance_profile" {
   description = "The instance profile name for the EC2 instance"
   type        = string
 }
