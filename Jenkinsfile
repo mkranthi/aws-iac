@@ -1,55 +1,31 @@
 pipeline {
-    agent any
+    agent any 
 
     parameters {
-        // Parameter to select the branch
-        choice(name: 'BRANCH', choices: ['feature-init', 'main', 'feature', 'develop'], description: 'Select the branch to deploy')
-        
-        // Parameter to select the environment
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod', 'dev1'], description: 'Select the environment for deployment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        choice (name: 'BRANCH', choices: ['develop', 'feature','feature-init'], description: 'Choose Branch')
     }
-
     stages {
-        stage('Checkout') {
+        stage ('checkout') {
             steps {
-                script {
-                    // Checkout the selected branch
-                    echo "Checking out branch: ${params.BRANCH}"
-                    checkout scm
-                    sh "git checkout ${params.BRANCH}"
-                }
+                sh "git checkout ${params.BRANCH}"
             }
         }
-
-        stage('Terraform Init') {
+        stage('Executing terraform init') {
             steps {
-                script {
-                    echo "Initializing Terraform..."
-                    sh 'terraform init -migrate-state'
-                }
-            }
-        }
-
+                sh 'terraform init'
+    }
+}
         stage('Terraform Plan') {
             steps {
-                script {
-                    // Pass environment-specific variables file
-                    def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
-                    echo "Running Terraform Plan with ${tfVarsFile}..."
-                    sh "terraform plan -out=plan.out"
-                }
+                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
             }
         }
-
         stage('Terraform Apply') {
             steps {
-                script {
-                    def tfVarsFile = "${params.ENVIRONMENT}.tfvars"
-                    echo "Running Terraform Apply with ${tfVarsFile}..."
-                    sh "terraform apply -auto-approve -out=plan.out"
-                    
-                }
+                sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -state=${params.ENVIRONMENT}.tfvars -auto-approve"
             }
         }
-    }
+              
+}
 }
