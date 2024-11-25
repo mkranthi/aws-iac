@@ -43,10 +43,6 @@ variable "key_name" {
   type        = string
 }
 
-variable "instance_profile_name" {
-    description = "The instance profile name for the EC2 instance"
-}
-
 variable "av_zone" {
   description = "The availability zone for the resources"
   type        = string
