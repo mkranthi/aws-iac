@@ -51,9 +51,3 @@ variable "av_zone" {
   description = "The availability zone for the resources"
   type        = string
 }
-
-variable "ENVIRONMENT" {
-  description = "Environment for the infrastructure (e.g., dev, prod)"
-  type        = string
-}
-
