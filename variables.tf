@@ -28,11 +28,6 @@ variable "role_name" {
   type        = string
 }
 
-variable "instance_name" {
-  description = "Name tag for the EC2 instance"
-  type        = string
-}
-
 variable "instance_type" {
   description = "Type of the EC2 instance"
   type        = string
@@ -47,16 +42,19 @@ variable "key_name" {
   description = "Name of the key pair to use for the instance"
   type        = string
 }
+
 variable "instance_profile_name" {
-    description = "The instance profile name for the EC2 instance"
-    default     = "default_instance_profile_name"
+  description = "The instance profile name for the EC2 instance"
+  type        = string
 }
 
 variable "av_zone" {
   description = "The availability zone for the resources"
   type        = string
 }
+
 variable "ENVIRONMENT" {
-  description = "The availability zone for the resources"
+  description = "Environment for the infrastructure (e.g., dev, prod)"
   type        = string
 }
+
