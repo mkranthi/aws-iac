@@ -9,6 +9,6 @@ instance_name       = "terraform_instance"
 role_name           = "default-instance-profile"
 instance_type       = "t2.micro"
 key_name            = "k8s-key"
-instance_profile    = "default-instance-profile"
+instance_profile_name    = "default-instance-profile"
 ENVIRONMENT         = "dev"
 
