@@ -47,9 +47,9 @@ variable "key_name" {
   description = "Name of the key pair to use for the instance"
   type        = string
 }
-variable "instance_profile" {
-  description = "The instance profile name for the EC2 instance"
-  type        = string
+variable "instance_profile_name" {
+    description = "The instance profile name for the EC2 instance"
+    default     = "default_instance_profile_name"
 }
 
 variable "av_zone" {
