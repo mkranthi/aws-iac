@@ -22,12 +22,6 @@ variable "ip_protocol" {
   description = "Protocol for the security group rule"
   type        = string
 }
-
-variable "role_name" {
-  description = "The IAM role name"
-  type        = string
-}
-
 variable "instance_type" {
   description = "Instance type for the EC2 instance"
   type        = string
@@ -42,11 +36,6 @@ variable "key_name" {
   description = "Name of the key pair to use for the instance"
   type        = string
 }
-
-variable "instance_profile_name" {
-    description = "The instance profile name for the EC2 instance"
-}
-
 
 variable "av_zone" {
   description = "Availability zone for the EC2 instance"
