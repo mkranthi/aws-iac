@@ -35,14 +35,6 @@ resource "aws_security_group_rule" "egress" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-# Reference to existing IAM role
-data "aws_iam_role" "existing_role" {
-  name = var.role_name
-}
-
-data "aws_iam_instance_profile" "existing_instance_profile" {
-  name = var.instance_profile_name
-}
 
 # EC2 instance creation
 resource "aws_instance" "terraform_instance" {
@@ -51,7 +43,7 @@ resource "aws_instance" "terraform_instance" {
   key_name               = var.key_name
   availability_zone      = var.av_zone
   vpc_security_group_ids = [aws_security_group.terraform_sg.id]
-  iam_instance_profile   = data.aws_iam_instance_profile.existing_instance_profile.name
+  iam_instance_profile   = "default-instance-profile"
 
   tags = {
     Name = var.instance_name
