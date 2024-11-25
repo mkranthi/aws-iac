@@ -44,8 +44,7 @@ variable "key_name" {
 }
 
 variable "instance_profile_name" {
-  description = "The instance profile name for the EC2 instance"
-  type        = string
+    description = "The instance profile name for the EC2 instance"
 }
 
 variable "av_zone" {
