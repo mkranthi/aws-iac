@@ -1,5 +1,5 @@
 pipeline {
-    agent any 
+    agent any
 
     parameters {
         gitParameter(
@@ -27,8 +27,9 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 script {
+                    // Export the environment variable for TF_VAR_<VARIABLE_NAME>
+                    sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
                     env.STATE_FILE = "terraform_${params.ENVIRONMENT}.tfstate"
-                    env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
             }
         }
@@ -39,18 +40,15 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=terraform/${env.STATE_FILE}" \
-                        -var-file=${env.VAR_FILE}
+                        -backend-config="key=terraform/${env.STATE_FILE}"
                 """
             }
         }
 
         stage('Terraform Plan') {
-            when {
-                expression { params.ACTION == 'APPLY' }
-            }
             steps {
-                sh "terraform plan -var-file=${env.VAR_FILE}"
+                // No need to pass -var-file or -var, Terraform automatically picks up TF_VAR_ENVIRONMENT
+                sh "terraform plan"
             }
         }
 
@@ -58,13 +56,9 @@ pipeline {
             steps {
                 script {
                     if (params.ACTION == 'APPLY') {
-                        sh """
-                            terraform apply -auto-approve -var-file=${env.VAR_FILE}
-                        """
+                        sh "terraform apply -auto-approve"
                     } else if (params.ACTION == 'DESTROY') {
-                        sh """
-                            terraform destroy -auto-approve -var-file=${env.VAR_FILE}
-                        """
+                        sh "terraform destroy -auto-approve"
                     }
                 }
             }
