@@ -18,4 +18,3 @@ module "ec2" {
     instance_profile_name = "default-instance-profile"
     
 }
-
