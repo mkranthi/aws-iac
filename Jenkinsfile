@@ -32,14 +32,14 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Terraform Init') {
             steps {
                 sh """
                     terraform init \
                         -reconfigure \
-                        -backend-config="kranti-terraform-statefile" \
-                        -backend-config="key=terraform${env.STATE_FILE}" \
+                        -backend-config="bucket=kranti-terraform-statefile" \
+                        -backend-config="key=terraform/${env.STATE_FILE}" \
                         -var-file=${env.VAR_FILE}
                 """
             }
