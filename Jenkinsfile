@@ -2,7 +2,6 @@ pipeline {
     agent any 
 
     parameters {
-        choice(name: 'BRANCH', choices: ['develop', 'feature', 'feature-init', 'feature-export'], description: 'Select Branch')
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
@@ -10,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/mkranthi/aws-iac.git', branch: "${params.BRANCH}"
+                git url: 'https://github.com/mkranthi/aws-iac.git'
             }
         }
 
