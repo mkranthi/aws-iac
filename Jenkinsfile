@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
-        choice (name: 'BRANCH', choices: ['develop', 'feature','feature-init'], description: 'Choose Branch')
+        string(name: 'BRANCH', defaultValue: 'develop', description: 'Enter Branch Name')
     }
     stages {
         stage ('checkout') {
