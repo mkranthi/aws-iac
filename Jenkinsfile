@@ -50,7 +50,7 @@ pipeline {
                 expression { params.ACTION == 'APPLY' }
             }
             steps {
-                sh "terraform plan -var-file=${env.VAR_FILE}"
+                sh "terraform plan "
             }
         }
 
@@ -59,11 +59,11 @@ pipeline {
                 script {
                     if (params.ACTION == 'APPLY') {
                         sh """
-                            terraform apply -auto-approve -var-file=${env.VAR_FILE}
+                            terraform apply -auto-approve 
                         """
                     } else if (params.ACTION == 'DESTROY') {
                         sh """
-                            terraform destroy -auto-approve -var-file=${env.VAR_FILE}
+                            terraform destroy -auto-approve 
                         """
                     }
                 }
