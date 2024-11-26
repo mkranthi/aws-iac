@@ -2,7 +2,14 @@ pipeline {
     agent any 
 
     parameters {
-        
+        gitParameter(
+            name: 'BRANCH', 
+            type: 'PT_BRANCH', 
+            branch: '', 
+            defaultValue: 'main', 
+            description: 'Select Git Branch', 
+            useRepository: 'https://github.com/mkranthi/aws-iac.git'
+        )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
