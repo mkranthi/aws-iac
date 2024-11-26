@@ -38,9 +38,8 @@ pipeline {
                 sh """
                     terraform init \
                         -reconfigure \
-                        -backend-config="bucket=<your-s3-bucket-name>" \
-                        -backend-config="key=${env.STATE_FILE}" \
-                        -backend-config="region=<your-region>" \
+                        -backend-config="kranti-terraform-statefile" \
+                        -backend-config="key=terraform${env.STATE_FILE}" \
                         -var-file=${env.VAR_FILE}
                 """
             }
