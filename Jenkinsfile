@@ -3,11 +3,11 @@ pipeline {
 
     parameters {
         gitParameter(
-            name: 'BRANCH', 
-            type: 'PT_BRANCH', 
-            branch: '', 
-            defaultValue: 'main', 
-            description: 'Select Git Branch', 
+            name: 'BRANCH',
+            type: 'PT_BRANCH',
+            branch: '',
+            defaultValue: 'main',
+            description: 'Select Git Branch',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
@@ -27,9 +27,14 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 script {
-                    // Export the environment variable for TF_VAR_<VARIABLE_NAME>
+                    // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
+                    sh "export TF_VAR_REGION='us-east-1'"      // Set other variables
+                    sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
+
+                    // Dynamically set the state file name
                     env.STATE_FILE = "terraform_${params.ENVIRONMENT}.tfstate"
+                    env.VAR_FILE = "terraform_${params.ENVIRONMENT}.tfvars"
                 }
             }
         }
@@ -41,14 +46,19 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
+                        -backend-config="var-file=${env.VAR_FILE}"
                 """
             }
         }
 
         stage('Terraform Plan') {
+            when {
+                expression { params.ACTION == 'APPLY' }
+            }
             steps {
-                // No need to pass -var-file or -var, Terraform automatically picks up TF_VAR_ENVIRONMENT
-                sh "terraform plan"
+                sh """
+                    terraform plan
+                """
             }
         }
 
@@ -56,9 +66,13 @@ pipeline {
             steps {
                 script {
                     if (params.ACTION == 'APPLY') {
-                        sh "terraform apply -auto-approve"
+                        sh """
+                            terraform apply -auto-approve
+                        """
                     } else if (params.ACTION == 'DESTROY') {
-                        sh "terraform destroy -auto-approve"
+                        sh """
+                            terraform destroy -auto-approve
+                        """
                     }
                 }
             }
