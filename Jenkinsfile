@@ -67,7 +67,7 @@ pipeline {
                 script {
                     if (params.ACTION == 'APPLY') {
                         sh """
-                            terraform apply -auto-approve
+                            terraform apply -auto-approve -var-file=${env.VAR_FILE}
                         """
                     } else if (params.ACTION == 'DESTROY') {
                         sh """
