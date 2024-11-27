@@ -57,7 +57,7 @@ pipeline {
             }
             steps {
                 sh """
-                    terraform plan
+                    terraform plan -var-file=${env.VAR_FILE} 
                 """
             }
         }
@@ -71,7 +71,7 @@ pipeline {
                         """
                     } else if (params.ACTION == 'DESTROY') {
                         sh """
-                            terraform destroy -auto-approve
+                            terraform destroy -auto-approve -var-file=${env.VAR_FILE}
                         """
                     }
                 }
