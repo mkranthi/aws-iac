@@ -46,7 +46,7 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
-                        -backend-config="var-file=${env.VAR_FILE}"
+                       
                 """
             }
         }
