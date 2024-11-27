@@ -11,15 +11,13 @@ output "security_group_id" {
 }
 
 output "instance_arn" {
-  value = module.ec2.terraform_instance_arn
+  value = module.ec2.instance_arn
 }
 
 output "public_ip" {
-  value = module.ec2.terraform_instance.public_ip
+  value = module.ec2.public_ip
 }
 
 output "public_dns" {
-  value = module.ec2.terraform_instance.public_dns
+  value = module.ec2.public_dns
 }
-
-
