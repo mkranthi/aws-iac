@@ -20,21 +20,21 @@ output "instance_id" {
 
 output "instance_arn" {
   description = "The instance arn of the EC2-instance"
-  value = aws_instance.my_instance.arn
+  value = aws_instance.terraform_instance.arn
 }
 
 output "public_ip" {
   description = "The Public_ip of the EC2-instance"
-  value = aws_instance.my_instance.public_ip
+  value = aws_instance.terraform_instance_ip
 }
 
 output "public_dns" {
   description = "The public_dns arn of the EC2-instance"
-  value = aws_instance.my_instance.public_dns
+  value = aws_instance.terraform_instance.public_dns
 }
 
 output "volume_id" {
   description = "The volume_id "
-  value = aws_ebs_volume.my_volume.id
+  value = aws_ebs_volume.terraform_instance.id
 }
 
