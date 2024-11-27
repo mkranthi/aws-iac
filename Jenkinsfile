@@ -23,7 +23,7 @@ pipeline {
                 ])
             }
         }
-        stage('Terraform Init') {
+        stage('printing branch name') {
             steps {
                 // Correcting echo command to print branch name
                 sh "echo Branch name is ${params.BRANCH}"
