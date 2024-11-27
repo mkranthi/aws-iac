@@ -25,7 +25,7 @@ pipeline {
         }
         stage('printing branch name') {
             steps {
-                // Correcting echo command to print branch name
+                
                 sh "echo Branch name is ${params.BRANCH}"
             }
         }
@@ -35,7 +35,6 @@ pipeline {
                 script {
                     // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
-                    sh "export TF_VAR_REGION='us-east-1'"      // Set other variables
                     sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
                     // Dynamically set the state file name
