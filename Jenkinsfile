@@ -25,8 +25,8 @@ pipeline {
         }
         stage('Terraform Init') {
             steps {
-                sh 
-                  echo "Branch name is ${env.GIT_BRANCH}"
+                // Correcting echo command to print branch name
+                sh "echo Branch name is ${params.BRANCH}"
             }
         }
 
