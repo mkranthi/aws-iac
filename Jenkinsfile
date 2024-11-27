@@ -33,8 +33,8 @@ pipeline {
                     sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
                     // Dynamically set the state file name
-                    env.STATE_FILE = "terraform_${params.ENVIRONMENT}.tfstate"
-                    env.VAR_FILE = "terraform_${params.ENVIRONMENT}.tfvars"
+                    env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
+                    env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
-                        
+                        -backend-config="var-file=${env.VAR_FILE}"
                 """
             }
         }
