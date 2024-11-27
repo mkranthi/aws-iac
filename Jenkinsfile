@@ -20,8 +20,13 @@ pipeline {
                 checkout([$class: 'GitSCM', 
                     branches: [[name: "${params.BRANCH}"]], 
                     userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                    echo "Branch name is ${env.GIT_BRANCH}"
                 ])
+            }
+        }
+        stage('Terraform Init') {
+            steps {
+                sh 
+                  echo "Branch name is ${env.GIT_BRANCH}"
             }
         }
 
