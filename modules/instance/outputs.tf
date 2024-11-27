@@ -18,23 +18,3 @@ output "instance_id" {
   value       = aws_instance.terraform_instance.id
 }
 
-
-output "instance_arn" {
-  description = "The arn of the EC2 instance"
-  value = aws_instance.my_instance.arn
-}
-
-output "public_ip" {
-  description = "The public_ip of the EC2 instance"
-  value = aws_instance.my_instance.public_ip
-}
-
-output "public_dns" {
-  description = "The public_dns of the EC2 instance"
-  value = aws_instance.my_instance.public_dns
-}
-
-output "volume_id" {
-  description = "The volume of the EC2 instance"
-  value = aws_ebs_volume.my_volume.id
-}
