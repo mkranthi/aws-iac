@@ -1,17 +1,17 @@
-
 pipeline {
     agent any 
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        choice (name: 'BRANCH', choices: ['develop', 'feature','feature-init'], description: 'Choose Branch')
     }
     stages {
         stage ('checkout') {
             steps {
-                git branch: 'develop', url: 'https://github.com/mkranthi/aws-iac.git'
+                sh "git checkout ${params.BRANCH}"
             }
         }
-        stage('executing terraform init') {
+        stage('Executing terraform init') {
             steps {
                 sh 'terraform init'
     }
@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Terraform Apply') {
             steps {
-                sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -auto-approve"
+                sh "terraform destroy -var-file=${params.ENVIRONMENT}.tfvars -state=${params.ENVIRONMENT}.tfvars -auto-approve"
             }
         }
               
