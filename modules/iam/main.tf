@@ -33,10 +33,7 @@ resource "aws_iam_policy" "iam_policy" {
     
         ]
         Effect   = "Allow"
-        Resource = [
-    "arn:aws:s3:::kranti-terraform-statefile",
-    "arn:aws:s3:::kranti-terraform-statefile/*"
-  ]
+        Resource =  "*"
       }
     ]
   })

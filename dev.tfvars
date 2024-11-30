@@ -8,8 +8,4 @@ avzone = "us-east-2a"
 v_size = 1
 d_name =   "/dev/sdh"
 volumename = "terraform_dev_ebs_volume"
-vpc_id = "vpc-4decb125"
-security_group_name = "dev-sg"
-to_port = 22
-from_port = 22
-ip_protocol = "tcp"
+
