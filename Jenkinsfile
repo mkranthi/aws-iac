@@ -35,7 +35,7 @@ pipeline {
                 script {
                     // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
-                    sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
+                   // sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
                     // Dynamically set the state file name
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"

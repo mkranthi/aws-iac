@@ -5,7 +5,4 @@ instance_type = "t2.micro"
 instance_name = "terraform_dev_instance"
 key_name = "k8-key"
 avzone = "us-east-2a"
-v_size = 1
-d_name =   "/dev/sdh"
-volumename = "terraform_dev_ebs_volume"
 
