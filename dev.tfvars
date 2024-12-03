@@ -9,5 +9,6 @@ avzone = "us-east-2a"
 description             = "Development environment KMS key"
 deletion_window_in_days = 7
 enable_key_rotation     = true
-iam_administrators      = ["arn:aws:iam::123456789012:user/DevAdmin"]
-iam_users               = ["arn:aws:iam::123456789012:user/DevUser"]
+
+iam_kms_role  = "my_kms_role"
+aws_role_name = "my_role_name"

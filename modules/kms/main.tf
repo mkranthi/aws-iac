@@ -11,7 +11,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Enable IAM User Permissions",
         Effect    = "Allow",
         Principal = {
-          AWS = var.aws.role_name
+          AWS = var.iam.role_name
         },
         Action   = "kms:*",
         Resource = "*"
@@ -20,7 +20,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow administration of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = var.aws.kms_role
+          AWS = var.iam.kms_role
         },
         Action   = [
           "kms:ReplicateKey",
