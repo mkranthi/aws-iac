@@ -58,5 +58,3 @@ resource "aws_kms_key" "dev_kms_key" {
     ]
   })
 }
-
-data "aws_caller_identity" "current" {}
