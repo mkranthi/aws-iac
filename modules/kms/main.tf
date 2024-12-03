@@ -1,27 +1,28 @@
 resource "aws_kms_key" "dev_kms_key" {
-    description = "creating first kms key for terraform project"
-    deletion_window_in_days = 7
-    enable_key_rotation = true
-    policy = jsonencode({
-        Version = "2012-10-17"
-    Id      = "key-default-1"
+  description             = var.kms.description
+  deletion_window_in_days = var.deletion_window_in_days
+  enable_key_rotation     = var.enable_key_rotation
+
+  policy = jsonencode({
+    Version   = "2012-10-17",
+    Id        = "key-default-1",
     Statement = [
       {
-        Sid    = "Enable IAM User Permissions"
-        Effect = "Allow"
+        Sid       = "Enable IAM User Permissions",
+        Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          AWS = var.aws.role_name
         },
-        Action   = "kms:*"
+        Action   = "kms:*",
         Resource = "*"
       },
       {
-        Sid    = "Allow administration of the key"
-        Effect = "Allow"
+        Sid       = "Allow administration of the key",
+        Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/Alice"
+          AWS = var.aws.kms_role
         },
-        Action = [
+        Action   = [
           "kms:ReplicateKey",
           "kms:Create*",
           "kms:Describe*",
@@ -39,12 +40,12 @@ resource "aws_kms_key" "dev_kms_key" {
         Resource = "*"
       },
       {
-        Sid    = "Allow use of the key"
-        Effect = "Allow"
+        Sid       = "Allow use of the key",
+        Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/Bob"
+          AWS = var.aws.role_name
         },
-        Action = [
+        Action   = [
           "kms:DescribeKey",
           "kms:Encrypt",
           "kms:Decrypt",
@@ -55,6 +56,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Resource = "*"
       }
     ]
-    })
-  
+  })
 }
+
+data "aws_caller_identity" "current" {}

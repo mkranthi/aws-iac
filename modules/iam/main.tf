@@ -51,3 +51,19 @@ resource "aws_iam_instance_profile" "my_instance_profile" {
     role = aws_iam_role.iam_role.name
 
 }
+
+resource "aws_iam_role" "kms" {
+  name = var.kms_role
+  assume_role_policy = jsonencode({
+  Version = "2012-10-17"
+  Statement = [
+    {
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+      Action = "sts:AssumeRole"
+    }
+  ]
+})
+}

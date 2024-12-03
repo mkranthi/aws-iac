@@ -15,6 +15,15 @@ module "iam" {
   role_name  = var.role_name
   iam_policy = var.iam_policy
 }
+module "kms" {
+  source = "./modules/kms"
+
+  description             = "KMS key for development environment"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+  iam_administrators      = ["arn:aws:iam::123456789012:user/Alice"]
+  iam_users               = ["arn:aws:iam::123456789012:user/Bob"]
+}
 
 module "ec2" {
   source             = "./modules/ec2"
