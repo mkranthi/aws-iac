@@ -27,6 +27,7 @@ pipeline {
         stage('Print Branch Name') {
             steps {
                 sh "echo Branch name is ${params.BRANCH}"
+                env.BRANCH_NAME = "terraform/${params.BRANCH}"
             }
         }
 
@@ -47,7 +48,7 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=terraform/${env.STATE_FILE}"
+                        -backend-config="key=terraform/${env.BRANCH_NAME}/${env.STATE_FILE}"
                 """
             }
         }
