@@ -15,14 +15,6 @@ module "iam" {
   role_name  = var.role_name
   iam_policy = var.iam_policy
 }
-module "kms" {
-  source = "./modules/kms"
-
-  description             = "KMS key for development environment"
-  deletion_window_in_days = 30
-  enable_key_rotation     = true
-  
-}
 
 
 module "kms_key" {
@@ -32,8 +24,8 @@ module "kms_key" {
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
 
-  iam_role_name           = module.iam.iam.role_name
-  kms_admin_role          = module.iam.iam.kms_admin_role
+  iam_role_name           = module.iam.iam_role_name
+  kms_admin_role          = module.iam.iam_kms_role
 }
 
 module "ec2" {
