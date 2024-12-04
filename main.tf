@@ -3,9 +3,7 @@ provider "aws" {
 }
 
 terraform {
-  backend "s3" {
-    bucket = "kranti-terraform-statefile" 
-    key    = "terraform/terraform.tfstate"  
+  backend "s3" { 
     region = "us-east-2"  
   }
 }
