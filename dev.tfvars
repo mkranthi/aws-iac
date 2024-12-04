@@ -11,9 +11,6 @@ key_name = "k8-key"
 iam_instance_profile      = "terraform_instance_profile"
 avzone = "us-east-2a"
 
-iam_kms_role  = "my_kms_role"
-aws_role_name = "my_role_name"
-
 v_size = 2
 d_name =   "/dev/sdh"
 volumename = "terraform_ebs_volume"
