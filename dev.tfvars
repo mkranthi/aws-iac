@@ -12,3 +12,12 @@ enable_key_rotation     = true
 
 iam_kms_role  = "my_kms_role"
 aws_role_name = "my_role_name"
+
+v_size = 1
+d_name =   "/dev/sdh"
+volumename = "terraform_ebs_volume"
+vpc_id = "vpc-4decb125"
+security_group_name = "project7-sg"
+to_port = 22
+from_port = 22
+ip_protocol = "tcp"
