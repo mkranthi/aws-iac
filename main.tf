@@ -21,8 +21,19 @@ module "kms" {
   description             = "KMS key for development environment"
   deletion_window_in_days = 30
   enable_key_rotation     = true
-  iam_administrators      = ["arn:aws:iam::123456789012:user/Alice"]
-  iam_users               = ["arn:aws:iam::123456789012:user/Bob"]
+  
+}
+
+
+module "kms_key" {
+  source = "./modules/kms"
+
+  description             = var.kms_description
+  deletion_window_in_days = var.deletion_window_in_days
+  enable_key_rotation     = var.enable_key_rotation
+
+  iam_role_name           = module.iam.iam.role_name
+  kms_admin_role          = module.iam.iam.kms_admin_role
 }
 
 module "ec2" {
@@ -32,5 +43,13 @@ module "ec2" {
   key_name           = var.key_name
   ami                = var.ami
   iam_instance_profile = module.iam.iam_instance_profile_name
-
+  avzone      = var.avzone
+  v_size      = var.v_size
+  d_name      = var.d_name
+  volumename  = var.volumename
+  vpc_id = var.vpc_id
+    security_group_name = var.security_group_name
+    to_port = var.to_port
+    from_port = var.from_port
+    ip_protocol = var.ip_protocol
 }

@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_kms_key" "dev_kms_key" {
   description             = var.kms.description
   deletion_window_in_days = var.deletion_window_in_days
@@ -11,7 +13,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Enable IAM User Permissions",
         Effect    = "Allow",
         Principal = {
-          AWS = var.iam.role_name
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
         },
         Action   = "kms:*",
         Resource = "*"
@@ -20,7 +22,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow administration of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = var.iam.kms_role
+          AWS = var.iam.kms_role.ARN
         },
         Action   = [
           "kms:ReplicateKey",
@@ -43,7 +45,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow use of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = var.aws.role_name
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
         },
         Action   = [
           "kms:DescribeKey",
