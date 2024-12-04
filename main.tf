@@ -23,6 +23,10 @@ module "kms_key" {
   source = "./modules/kms"
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
+  iam = {
+    role_name = module.iam.role_name
+    kms_role  = module.iam.kms_role
+  }
 
 }
 

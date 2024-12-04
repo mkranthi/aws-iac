@@ -9,3 +9,11 @@ variable "enable_key_rotation" {
   description = "Flag to enable key rotation"
   default     = true
 }
+
+variable "iam" {
+  description = "IAM details including role_name and kms_role"
+  type = object({
+    role_name = string
+    kms_role  = string
+  })
+}
