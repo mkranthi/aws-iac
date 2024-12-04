@@ -20,7 +20,7 @@ module "iam" {
 
 
 module "kms_key" {
-  source = "./modules/kms"
+  source                  = "./modules/kms"
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
   iam = {
@@ -29,6 +29,7 @@ module "kms_key" {
   }
 
 }
+
 
 module "ec2" {
   source             = "./modules/ec2"
