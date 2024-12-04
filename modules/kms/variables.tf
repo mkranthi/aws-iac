@@ -27,3 +27,5 @@ variable "key_users" {
   description = "List of IAM users with usage permissions on the KMS key"
   default     = ["Bob"]
 }
+
+

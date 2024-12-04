@@ -22,7 +22,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow administration of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = var.iam.kms_role.ARN
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.kms_role}"
         },
         Action   = [
           "kms:ReplicateKey",
