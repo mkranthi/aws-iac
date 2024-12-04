@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_kms_key" "dev_kms_key" {
-  description             = var.kms.description
+  description             = "creating terraform kms_key for new module"
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
 

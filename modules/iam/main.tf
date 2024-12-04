@@ -66,4 +66,7 @@ resource "aws_iam_role" "kms" {
     }
   ]
 })
+tags = {
+    Name = var.kms_role
+  }
 }

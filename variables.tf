@@ -2,6 +2,10 @@ variable "role_name" {
     description = "this is the role creating for s3 bucket access for ec2"
     type = string
 }
+variable "kms_role" {
+    description = "this is the role creating for kms_key admin"
+    type = string
+}
 
 variable "iam_policy" {
     description = "policy give access to s3 bucket"
@@ -24,22 +28,6 @@ variable "enable_key_rotation" {
   type        = bool
   default     = true
 }
-
-variable "iam_administrators" {
-  description = "List of IAM users or roles with admin access to the key"
-  type        = list(string)
-}
-
-variable "iam_users" {
-  description = "List of IAM users allowed to use the key"
-  type        = list(string)
-}
-
-variable "kms_role_name" {
-    description = "this is the role creating for s3 bucket access for ec2"
-    type = string
-}
-
 
 variable "ami" {
   description = "ami id for instance_type"

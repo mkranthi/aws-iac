@@ -6,7 +6,6 @@ instance_name = "terraform_dev_instance"
 key_name = "k8-key"
 avzone = "us-east-2a"
 
-description             = "Development environment KMS key"
 deletion_window_in_days = 7
 enable_key_rotation     = true
 
