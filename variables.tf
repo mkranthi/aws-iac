@@ -12,11 +12,6 @@ variable "iam_policy" {
     type = string
 }
 
-variable "description" {
-  description = "Description of the KMS key"
-  type        = string
-}
-
 variable "deletion_window_in_days" {
   description = "Number of days before deleting the key"
   type        = number
