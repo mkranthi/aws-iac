@@ -26,8 +26,10 @@ pipeline {
 
         stage('Print Branch Name') {
             steps {
+                script{
                 sh "echo Branch name is ${params.BRANCH}"
                 env.BRANCH_NAME = "terraform/${params.BRANCH}"
+                }
             }
         }
 
