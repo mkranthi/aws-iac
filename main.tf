@@ -14,18 +14,16 @@ module "iam" {
   source = "./modules/iam"
   role_name  = var.role_name
   iam_policy = var.iam_policy
+  kms_role = var.kms_role
+
 }
 
 
 module "kms_key" {
   source = "./modules/kms"
-
-  description             = var.kms_description
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
 
-  iam_role_name           = module.iam.iam_role_name
-  kms_admin_role          = module.iam.iam_kms_role
 }
 
 module "ec2" {
