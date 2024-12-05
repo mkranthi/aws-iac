@@ -5,6 +5,7 @@ pipeline {
         gitParameter(
             name: 'BRANCH',
             type: 'PT_BRANCH',
+            branch: '',
             defaultValue: 'main',
             description: 'Select Git Branch',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
@@ -13,24 +14,18 @@ pipeline {
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
-    steps {
-    cleanWs()
-}
-
-    stage('Checkout') {
-    steps {
-        script {
-            echo "Selected Branch: ${params.BRANCH}"
-            checkout([$class: 'GitSCM',
-                      branches: [[name: "refs/heads/${params.BRANCH}"]],
-                      userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]])
-        }
-    }
-}
-
-
-        stage('Printing Branch Name') {
+    stages {
+        stage('Checkout') {
             steps {
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: "${params.BRANCH}"]], 
+                    userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
+                ])
+            }
+        }
+        stage('printing branch name') {
+            steps {
+                
                 sh "echo Branch name is ${params.BRANCH}"
             }
         }
@@ -40,8 +35,9 @@ pipeline {
                 script {
                     // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
+                   // sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
-                    // Dynamically set the state file and variable file names
+                    // Dynamically set the state file name
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
@@ -55,6 +51,7 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
+                       
                 """
             }
         }
@@ -65,7 +62,7 @@ pipeline {
             }
             steps {
                 sh """
-                    terraform plan -var-file=${env.VAR_FILE}
+                    terraform plan -var-file=${env.VAR_FILE} 
                 """
             }
         }
