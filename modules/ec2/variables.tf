@@ -56,3 +56,7 @@ variable "ip_protocol" {
     description = "name of protocol"
     type = string
 }
+variable "kms_key_id" {
+  description = "The ARN or ID of the KMS key to encrypt the EBS volume"
+  type        = string
+}

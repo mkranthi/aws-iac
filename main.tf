@@ -28,6 +28,11 @@ module "kms_key" {
 
 }
 
+module "s3" {
+  source       = "./modules/s3"
+  bucket_name  = var.bucket_name
+  kms_key_id   = module.kms.kms_key_arn
+}
 
 module "ec2" {
   source             = "./modules/ec2"
@@ -40,6 +45,7 @@ module "ec2" {
   v_size      = var.v_size
   d_name      = var.d_name
   volumename  = var.volumename
+  kms_key_id         = module.kms.kms_key_arn
   vpc_id = var.vpc_id
     security_group_name = var.security_group_name
     to_port = var.to_port
