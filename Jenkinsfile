@@ -17,17 +17,17 @@ pipeline {
     cleanWs()
 }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "Selected Branch: ${params.BRANCH}"
-                    checkout([$class: 'GitSCM',
-                              branches: [[name: "${params.BRANCH.startsWith('origin/') ? params.BRANCH.replace('origin/', '') : params.BRANCH}"]],
-                              userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]])
-                }
-            }
+    stage('Checkout') {
+    steps {
+        script {
+            echo "Selected Branch: ${params.BRANCH}"
+            checkout([$class: 'GitSCM',
+                      branches: [[name: "refs/heads/${params.BRANCH}"]],
+                      userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]])
         }
+    }
+}
+
 
         stage('Printing Branch Name') {
             steps {
