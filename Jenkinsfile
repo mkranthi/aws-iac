@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     parameters {
-        gitParameter(
-            name: 'BRANCH',
-            type: 'PT_BRANCH',
-            branch: '',
-            defaultValue: 'main',
-            description: 'Select Git Branch',
-            useRepository: 'https://github.com/mkranthi/aws-iac.git'
+        // Using the List Git Branches Parameter plugin to get the available branches
+        listGitBranches(
+            name: 'BRANCH',  
+            description: 'Select Git Branch',  
+            defaultValue: 'main', 
+            sortMode: 'ASCENDING',  
+            useRepository: 'https://github.com/mkranthi/aws-iac.git' 
         )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
@@ -17,16 +17,18 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: "${params.BRANCH}"]], 
-                    userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                ])
+                script {
+                    echo "Selected Branch: ${params.BRANCH}"
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: "origin/${params.BRANCH}"]], // Using selected branch
+                              userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]])
+                }
             }
         }
-        stage('printing branch name') {
+
+        stage('Print Branch Name') {
             steps {
-                
-                sh "echo Branch name is ${params.BRANCH}"
+                echo "Currently checked out to branch: ${params.BRANCH}"
             }
         }
 
@@ -35,8 +37,6 @@ pipeline {
                 script {
                     // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
-                   // sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
-
                     // Dynamically set the state file name
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
@@ -51,7 +51,6 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
-                       
                 """
             }
         }
@@ -62,7 +61,7 @@ pipeline {
             }
             steps {
                 sh """
-                    terraform plan -var-file=${env.VAR_FILE} 
+                    terraform plan -var-file=${env.VAR_FILE}
                 """
             }
         }
