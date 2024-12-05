@@ -19,7 +19,7 @@ pipeline {
                 script {
                     echo "Selected Branch: ${params.BRANCH}"
                     checkout([$class: 'GitSCM',
-                              branches: [[name: "${params.BRANCH}"]],
+                              branches: [[name: "${params.BRANCH.split('/').last()}"]],
                               userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]])
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
-            }
+            }   
         }
 
         stage('Terraform Init') {
