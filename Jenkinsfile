@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         gitParameter(
-            name: 'BRANCH',
+            name: 'BRANCH',  
             type: 'PT_BRANCH',
             branch: '',
             defaultValue: 'main',
@@ -17,16 +17,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: "${params.BRANCH}"]], 
-                    userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                ])
+                script {
+                    echo "Selected Branch: ${params.BRANCH}"
+
+                    // Perform the checkout dynamically based on the selected branch
+                    checkout([
+                        $class: 'GitSCM', 
+                        branches: [[name: "origin/${params.BRANCH}"]], // Ensure to specify 'origin/' for the branch
+                        userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
+                    ])
+                }
             }
         }
-        stage('printing branch name') {
+        
+        stage('Printing Branch Name') {
             steps {
-                
-                sh "echo Branch name is ${params.BRANCH}"
+                script {
+                    // Print the selected branch
+                    echo "Currently checked out to branch: ${params.BRANCH}"
+                }
             }
         }
 
@@ -35,7 +44,6 @@ pipeline {
                 script {
                     // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
-                   // sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
                     // Dynamically set the state file name
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
@@ -51,7 +59,6 @@ pipeline {
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
                         -backend-config="key=terraform/${env.STATE_FILE}"
-                       
                 """
             }
         }
