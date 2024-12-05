@@ -13,6 +13,10 @@ pipeline {
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
+    steps {
+    cleanWs()
+}
+
     stages {
         stage('Checkout') {
             steps {
