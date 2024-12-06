@@ -15,20 +15,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "Selected Branch: ${params.BRANCH}"
-
-                    // Perform the checkout dynamically based on the selected branch
-                    checkout([
-                        $class: 'GitSCM', 
-                        branches: [[name: "origin/${params.BRANCH}"]], // Ensure to specify 'origin/' for the branch
-                        userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                    ])
-                }
-            }
-        }
         
         stage('Printing Branch Name') {
             steps {
