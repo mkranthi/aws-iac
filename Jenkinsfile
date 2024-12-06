@@ -15,19 +15,30 @@ pipeline {
     }
 
     stages {
+        stage('Debug Git Branches') {
+            steps {
+                script {
+                    echo "Listing all available branches from the repository..."
+                    sh """
+                        git ls-remote --heads https://github.com/mkranthi/aws-iac.git
+                    """
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 script {
                     echo "Selected Branch: ${params.BRANCH}"
 
-                    // Perform a clean checkout dynamically based on the selected branch
+                    // Corrected checkout configuration
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "refs/heads/${params.BRANCH}"]], // Use 'refs/heads/' for branch selection
+                        branches: [[name: "${params.BRANCH}"]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [
-                            [$class: 'WipeWorkspace'], // Wipe workspace to ensure a clean clone
-                            [$class: 'CleanBeforeCheckout'] // Clean repo before checkout
+                            [$class: 'WipeWorkspace'], // Cleans workspace before checkout
+                            [$class: 'CleanBeforeCheckout'] // Ensures a clean checkout
                         ],
                         userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
                     ])
@@ -38,12 +49,7 @@ pipeline {
         stage('Printing Branch Name') {
             steps {
                 script {
-                    // Print the current branch
                     echo "Currently checked out to branch: ${params.BRANCH}"
-                    sh """
-                        git status
-                        git branch --show-current
-                    """
                 }
             }
         }
@@ -51,18 +57,22 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 script {
-                    // Set the environment variables for Terraform
+                    echo "Setting up environment variables for Terraform..."
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
 
-                    // Dynamically set the state file name
+                    // Dynamically set state and variable file names
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
+
+                    echo "State File: ${env.STATE_FILE}"
+                    echo "Var File: ${env.VAR_FILE}"
                 }
             }
         }
 
         stage('Terraform Init') {
             steps {
+                echo "Initializing Terraform..."
                 sh """
                     terraform init \
                         -reconfigure \
@@ -77,8 +87,9 @@ pipeline {
                 expression { params.ACTION == 'APPLY' }
             }
             steps {
+                echo "Running Terraform Plan for environment: ${params.ENVIRONMENT}..."
                 sh """
-                    terraform plan -var-file=${env.VAR_FILE} 
+                    terraform plan -var-file=${env.VAR_FILE}
                 """
             }
         }
@@ -87,11 +98,26 @@ pipeline {
             steps {
                 script {
                     if (params.ACTION == 'APPLY') {
+                        echo "Applying Terraform changes..."
                         sh """
                             terraform apply -auto-approve -var-file=${env.VAR_FILE}
                         """
                     } else if (params.ACTION == 'DESTROY') {
+                        echo "Destroying Terraform resources..."
                         sh """
                             terraform destroy -auto-approve -var-file=${env.VAR_FILE}
                         """
-                  
+                    } else {
+                        error "Invalid ACTION selected: ${params.ACTION}"
+                    }
+                }
+            }
+        }
+
+        stage('Post Actions') {
+            steps {
+                echo "Pipeline execution completed for branch: ${params.BRANCH} and environment: ${params.ENVIRONMENT}"
+            }
+        }
+    }
+}
