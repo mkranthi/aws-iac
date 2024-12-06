@@ -2,23 +2,16 @@ pipeline {
     agent any
 
     parameters {
-        // List Git Branches Parameter
-        listGitBranches(
-            name: 'BRANCH',                        // Parameter name
-            defaultValue: 'main',                  // Default branch
-            description: 'Select a Git branch',    // Description for the parameter
-            remoteURL: 'https://github.com/mkranthi/aws-iac.git' // Git repository URL
+        gitParameter(
+            name: 'BRANCH',  
+            type: 'PT_BRANCH',
+            branch: '',
+            defaultValue: 'main',
+            description: 'Select Git Branch',
+            useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
-        choice(
-            name: 'ENVIRONMENT', 
-            choices: ['dev', 'test', 'prod'], 
-            description: 'Choose the environment to deploy'
-        )
-        choice(
-            name: 'ACTION', 
-            choices: ['APPLY', 'DESTROY'], 
-            description: 'Choose Terraform action'
-        )
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
+        choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
     stages {
@@ -29,27 +22,30 @@ pipeline {
 
                     // Perform the checkout dynamically based on the selected branch
                     checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "${params.BRANCH.split('/').last()}"]],
+                        $class: 'GitSCM', 
+                        branches: [[name: "origin/${params.BRANCH}"]], // Ensure to specify 'origin/' for the branch
                         userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
                     ])
                 }
             }
         }
-
-        stage('Debug Branch') {
+        
+        stage('Printing Branch Name') {
             steps {
-                echo "Checked out to branch: ${params.BRANCH}"
+                script {
+                    // Print the selected branch
+                    echo "Currently checked out to branch: ${params.BRANCH}"
+                }
             }
         }
 
         stage('Setup Environment') {
             steps {
                 script {
-                    echo "Setting up environment: ${params.ENVIRONMENT}"
-                    
-                    // Set Terraform environment variables
-                    env.TF_VAR_ENVIRONMENT = "${params.ENVIRONMENT}"
+                    // Set the environment variables for Terraform
+                    sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
+
+                    // Dynamically set the state file name
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
@@ -62,7 +58,7 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=${env.STATE_FILE}"
+                        -backend-config="key=terraform/${env.STATE_FILE}"
                 """
             }
         }
@@ -73,7 +69,7 @@ pipeline {
             }
             steps {
                 sh """
-                    terraform plan -var-file=${env.VAR_FILE}
+                    terraform plan -var-file=${env.VAR_FILE} 
                 """
             }
         }
@@ -92,12 +88,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo "Pipeline completed for branch: ${params.BRANCH} and environment: ${params.ENVIRONMENT}"
         }
     }
 }
