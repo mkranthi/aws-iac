@@ -30,7 +30,7 @@ pipeline {
                     // Perform the checkout dynamically based on the selected branch
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "${params.BRANCH}"]],
+                        branches: [[name: "${params.BRANCH.split('/').last()}"]],
                         userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
                     ])
                 }
