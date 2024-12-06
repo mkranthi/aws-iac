@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         gitParameter(
-            name: 'BRANCH',  
+            name: 'BRANCH',
             type: 'PT_BRANCH',
             branch: '',
             defaultValue: 'main',
@@ -20,21 +20,30 @@ pipeline {
                 script {
                     echo "Selected Branch: ${params.BRANCH}"
 
-                    // Perform the checkout dynamically based on the selected branch
+                    // Perform a clean checkout dynamically based on the selected branch
                     checkout([
-                        $class: 'GitSCM', 
-                        branches: [[name: "origin/${params.BRANCH}"]], // Ensure to specify 'origin/' for the branch
+                        $class: 'GitSCM',
+                        branches: [[name: "refs/heads/${params.BRANCH}"]], // Use 'refs/heads/' for branch selection
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'WipeWorkspace'], // Wipe workspace to ensure a clean clone
+                            [$class: 'CleanBeforeCheckout'] // Clean repo before checkout
+                        ],
                         userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
                     ])
                 }
             }
         }
-        
+
         stage('Printing Branch Name') {
             steps {
                 script {
-                    // Print the selected branch
+                    // Print the current branch
                     echo "Currently checked out to branch: ${params.BRANCH}"
+                    sh """
+                        git status
+                        git branch --show-current
+                    """
                 }
             }
         }
@@ -85,9 +94,4 @@ pipeline {
                         sh """
                             terraform destroy -auto-approve -var-file=${env.VAR_FILE}
                         """
-                    }
-                }
-            }
-        }
-    }
-}
+                  
