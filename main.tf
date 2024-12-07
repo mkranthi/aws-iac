@@ -13,7 +13,7 @@ module "iam" {
   role_name  = var.role_name
   iam_policy = var.iam_policy
   kms_role = var.kms_role
-
+  kms_key_arn = module.kms.kms_key_arn
 }
 
 
@@ -36,6 +36,7 @@ module "ec2" {
   key_name           = var.key_name
   ami                = var.ami
   iam_instance_profile = module.iam.iam_instance_profile_name
+  kms_key_arn = module.kms.kms_key_arn
   avzone      = var.avzone
   v_size      = var.v_size
   d_name      = var.d_name
