@@ -3,23 +3,21 @@ pipeline {
 
     parameters {
         gitParameter(
-            name: 'BRANCH',
+            name: 'BRANCH',  
             type: 'PT_BRANCH',
             branch: '',
             defaultValue: 'main',
             description: 'Select Git Branch',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action')
     }
-
     stages {
-        stage('Print Branch Name') {
+        stage('Printing Branch Name') {
             steps {
                 script {
-                    sh "echo Branch name is ${params.BRANCH}"
-                    env.BRANCH_NAME = "terraform/${params.BRANCH}"
+                    echo "Currently checked out to branch: ${params.BRANCH}"
                 }
             }
         }
@@ -28,6 +26,8 @@ pipeline {
             steps {
                 script {
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
+
+                    // Dynamically set state and var files
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
@@ -40,7 +40,7 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=${env.BRANCH_NAME}/${env.STATE_FILE}"
+                        -backend-config="key=terraform/${env.BRANCH_NAME}/${env.STATE_FILE}"
                 """
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             }
             steps {
                 sh """
-                    terraform plan -var-file=${env.VAR_FILE}
+                    terraform plan -var-file=${env.VAR_FILE} 
                 """
             }
         }
