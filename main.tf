@@ -16,7 +16,6 @@ module "iam" {
   kms_key_arn = module.kms.kms_key_arn
 }
 
-
 module "kms_key" {
   source                  = "./modules/kms"
   deletion_window_in_days = var.deletion_window_in_days
