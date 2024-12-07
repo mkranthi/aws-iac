@@ -35,6 +35,17 @@ pipeline {
             }
         }
 
+        stage('Terraform Init') {
+            steps {
+                sh """
+                    terraform init \
+                        -reconfigure \
+                        -backend-config="bucket=kranti-terraform-statefile" \
+                        -backend-config="key=${env.STATE_FILE}"
+                """
+            }
+        }
+
         stage('Terraform Plan') {
             when {
                 expression { params.ACTION in ['PLAN', 'APPLY'] }
