@@ -23,5 +23,4 @@ module "ec2" {
   key_name           = var.key_name
   ami                = var.ami
   iam_instance_profile = module.iam.iam_instance_profile_name
-
 }
