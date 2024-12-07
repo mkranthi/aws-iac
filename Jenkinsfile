@@ -13,7 +13,6 @@ pipeline {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action')
     }
-
     stages {
         stage('Printing Branch Name') {
             steps {
