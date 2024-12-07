@@ -1,4 +1,3 @@
-This  is iam file for kms
 resource "aws_iam_role" "iam_role" {
   name = var.role_name
   assume_role_policy = jsonencode({
