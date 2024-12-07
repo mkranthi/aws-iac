@@ -11,24 +11,15 @@ pipeline {
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
-        choice(name: 'ACTION', choices: ['PLAN', 'DESTROY'], description: 'Choose Action') // Removed APPLY
+        choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action') // Added APPLY
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: "${params.BRANCH}"]], 
-                    userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                ])
-            }
-        }
-
         stage('Print Branch Name') {
             steps {
-                script{
-                sh "echo Branch name is ${params.BRANCH}"
-                env.BRANCH_NAME = "terraform/${params.BRANCH}"
+                script {
+                    sh "echo Branch name is ${params.BRANCH}"
+                    env.BRANCH_NAME = "terraform/${params.BRANCH}"
                 }
             }
         }
@@ -36,7 +27,6 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 script {
-                    // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
@@ -50,18 +40,29 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=terraform/${env.BRANCH_NAME}/${env.STATE_FILE}"
+                        -backend-config="key=${env.BRANCH_NAME}/${env.STATE_FILE}"
                 """
             }
         }
 
         stage('Terraform Plan') {
             when {
-                expression { params.ACTION == 'PLAN' }
+                expression { params.ACTION in ['PLAN', 'APPLY'] }
             }
             steps {
                 sh """
                     terraform plan -var-file=${env.VAR_FILE}
+                """
+            }
+        }
+
+        stage('Terraform Apply') {
+            when {
+                expression { params.ACTION == 'APPLY' }
+            }
+            steps {
+                sh """
+                    terraform apply -auto-approve -var-file=${env.VAR_FILE}
                 """
             }
         }
