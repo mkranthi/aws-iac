@@ -10,13 +10,8 @@ pipeline {
             description: 'Select Git Branch',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
-<<<<<<< HEAD
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
-        choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action') // Added APPLY
-=======
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
-        choice(name: 'ACTION', choices: ['PLAN', 'DESTROY'], description: 'Choose Action') // Removed APPLY
->>>>>>> 2947ef4 (test)
+        choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
     stages {
