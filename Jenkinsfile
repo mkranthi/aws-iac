@@ -11,15 +11,13 @@ pipeline {
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
-        choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
+        choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
     stages {
-        
         stage('Printing Branch Name') {
             steps {
                 script {
-                    // Print the selected branch
                     echo "Currently checked out to branch: ${params.BRANCH}"
                 }
             }
@@ -28,30 +26,18 @@ pipeline {
         stage('Setup Environment') {
             steps {
                 script {
-                    // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
 
-                    // Dynamically set the state file name
+                    // Dynamically set state and var files
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
             }
         }
 
-        stage('Terraform Init') {
-            steps {
-                sh """
-                    terraform init \
-                        -reconfigure \
-                        -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=terraform/${env.STATE_FILE}"
-                """
-            }
-        }
-
         stage('Terraform Plan') {
             when {
-                expression { params.ACTION == 'APPLY' }
+                expression { params.ACTION in ['PLAN', 'APPLY'] }
             }
             steps {
                 sh """
@@ -60,19 +46,25 @@ pipeline {
             }
         }
 
-        stage('Terraform Apply or Destroy') {
+        stage('Terraform Apply') {
+            when {
+                expression { params.ACTION == 'APPLY' }
+            }
             steps {
-                script {
-                    if (params.ACTION == 'APPLY') {
-                        sh """
-                            terraform apply -auto-approve -var-file=${env.VAR_FILE}
-                        """
-                    } else if (params.ACTION == 'DESTROY') {
-                        sh """
-                            terraform destroy -auto-approve -var-file=${env.VAR_FILE}
-                        """
-                    }
-                }
+                sh """
+                    terraform apply -auto-approve -var-file=${env.VAR_FILE}
+                """
+            }
+        }
+
+        stage('Terraform Destroy') {
+            when {
+                expression { params.ACTION == 'DESTROY' }
+            }
+            steps {
+                sh """
+                    terraform destroy -auto-approve -var-file=${env.VAR_FILE}
+                """
             }
         }
     }
