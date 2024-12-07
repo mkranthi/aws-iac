@@ -41,7 +41,7 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=${env.STATE_FILE}"
+                        -backend-config="key=terraform/${env.BRANCH_NAME}/${env.STATE_FILE}"
                 """
             }
         }
