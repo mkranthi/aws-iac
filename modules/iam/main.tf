@@ -45,7 +45,7 @@ resource "aws_iam_policy" "iam_policy" {
           "kms:GenerateDataKeyWithoutPlaintext"
         ]
         Effect   = "Allow"
-        Resource = module.kms.kms_key_arn  # Referencing KMS key ARN
+        Resource = var.kms_key_arn  # Referencing KMS key ARN
       }
     ]
   })
