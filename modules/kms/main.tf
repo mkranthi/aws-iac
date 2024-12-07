@@ -56,8 +56,8 @@ resource "aws_kms_key" "dev_kms_key" {
           "kms:GenerateDataKeyWithoutPlaintext"
         ],
         Resource = "*"
-      }
-      
+      },
+
       {
         Sid       = "Allow key administration by root account", 
         Effect    = "Allow",
