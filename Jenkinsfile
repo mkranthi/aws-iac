@@ -10,7 +10,7 @@ pipeline {
             description: 'Select Git Branch',
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'prod'], description: 'Choose Environment')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
         choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
