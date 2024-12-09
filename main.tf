@@ -4,8 +4,6 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "kranti-terraform-statefile" 
-    key    = "terraform/terraform.tfstate"  
     region = "us-east-2"  
   }
 }
@@ -23,5 +21,4 @@ module "ec2" {
   key_name           = var.key_name
   ami                = var.ami
   iam_instance_profile = module.iam.iam_instance_profile_name
-
 }

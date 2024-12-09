@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         gitParameter(
-            name: 'BRANCH',
+            name: 'BRANCH',  
             type: 'PT_BRANCH',
             branch: '',
             defaultValue: 'main',
@@ -11,33 +11,24 @@ pipeline {
             useRepository: 'https://github.com/mkranthi/aws-iac.git'
         )
         choice(name: 'ENVIRONMENT', choices: ['dev', 'dev1', 'test', 'prod'], description: 'Choose Environment')
-        choice(name: 'ACTION', choices: ['APPLY', 'DESTROY'], description: 'Choose Action')
+        choice(name: 'ACTION', choices: ['PLAN', 'APPLY', 'DESTROY'], description: 'Choose Action')
     }
 
     stages {
-        stage('Checkout') {
+        stage('Printing Branch Name') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: "${params.BRANCH}"]], 
-                    userRemoteConfigs: [[url: 'https://github.com/mkranthi/aws-iac.git']]
-                ])
-            }
-        }
-        stage('printing branch name') {
-            steps {
-                
-                sh "echo Branch name is ${params.BRANCH}"
+                script {
+                    echo "Currently checked out to branch: ${params.BRANCH}"
+                }
             }
         }
 
         stage('Setup Environment') {
             steps {
                 script {
-                    // Set the environment variables for Terraform
                     sh "export TF_VAR_ENVIRONMENT=${params.ENVIRONMENT}"
-                   // sh "export TF_VAR_INSTANCE_TYPE='t2.micro'" // Set other variables
 
-                    // Dynamically set the state file name
+                    // Dynamically set state and var files
                     env.STATE_FILE = "terraform/${params.ENVIRONMENT}.tfstate"
                     env.VAR_FILE = "${params.ENVIRONMENT}.tfvars"
                 }
@@ -50,15 +41,14 @@ pipeline {
                     terraform init \
                         -reconfigure \
                         -backend-config="bucket=kranti-terraform-statefile" \
-                        -backend-config="key=terraform/${env.STATE_FILE}"
-                       
+                        -backend-config="key=terraform/${env.BRANCH_NAME}/${env.STATE_FILE}"
                 """
             }
         }
 
         stage('Terraform Plan') {
             when {
-                expression { params.ACTION == 'APPLY' }
+                expression { params.ACTION in ['PLAN', 'APPLY'] }
             }
             steps {
                 sh """
@@ -67,19 +57,25 @@ pipeline {
             }
         }
 
-        stage('Terraform Apply or Destroy') {
+        stage('Terraform Apply') {
+            when {
+                expression { params.ACTION == 'APPLY' }
+            }
             steps {
-                script {
-                    if (params.ACTION == 'APPLY') {
-                        sh """
-                            terraform apply -auto-approve -var-file=${env.VAR_FILE}
-                        """
-                    } else if (params.ACTION == 'DESTROY') {
-                        sh """
-                            terraform destroy -auto-approve -var-file=${env.VAR_FILE}
-                        """
-                    }
-                }
+                sh """
+                    terraform apply -auto-approve -var-file=${env.VAR_FILE}
+                """
+            }
+        }
+
+        stage('Terraform Destroy') {
+            when {
+                expression { params.ACTION == 'DESTROY' }
+            }
+            steps {
+                sh """
+                    terraform destroy -auto-approve -var-file=${env.VAR_FILE}
+                """
             }
         }
     }
