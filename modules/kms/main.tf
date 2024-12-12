@@ -1,7 +1,8 @@
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_kms_key" "dev_kms_key" {
-  description             = "creating terraform kms_key for new module"
+  description             = "Creating a Terraform KMS key for the new module"
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
 
@@ -57,7 +58,6 @@ resource "aws_kms_key" "dev_kms_key" {
         ],
         Resource = "*"
       },
-
       {
         Sid       = "Allow key administration by root account", 
         Effect    = "Allow",
@@ -65,6 +65,18 @@ resource "aws_kms_key" "dev_kms_key" {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         Action   = "kms:PutKeyPolicy", 
+        Resource = "*"
+      },
+      {
+        Sid       = "Allow KMS key usage for EC2 encryption",
+        Effect    = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
+        },
+        Action   = [ 
+          "kms:Decrypt",
+          "kms:GenerateDataKey"
+        ],
         Resource = "*"
       }
     ]
