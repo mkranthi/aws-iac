@@ -45,7 +45,7 @@ resource "aws_iam_policy" "iam_policy" {
           "kms:ReEncrypt*",       
           "kms:GenerateDataKey",  
           "kms:GenerateDataKeyWithoutPlaintext",
-          "kms:EnableKeyRotation"
+          "kms:EnableKeyRotation"  # This was added for EC2 Role permissions
         ]
         Effect   = "Allow"
         Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
@@ -54,7 +54,7 @@ resource "aws_iam_policy" "iam_policy" {
   })
 }
 
-# Attach IAM Policy to Role
+# Attach IAM Policy to EC2 Role
 resource "aws_iam_policy_attachment" "policy_attachment" {
   name       = "${var.role_name}_attachment"
   roles      = [aws_iam_role.iam_role.name]
@@ -87,3 +87,33 @@ resource "aws_iam_role" "kms" {
     Name = var.kms_role
   }
 }
+
+# IAM Policy for KMS Role
+resource "aws_iam_policy" "kms_policy" {
+  name   = "${var.kms_role}_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "kms:EnableKeyRotation",
+          "kms:DescribeKey",
+          "kms:ListAliases",
+          "kms:PutKeyPolicy",
+          "kms:CreateKey",
+          "kms:ScheduleKeyDeletion"
+        ]
+        Effect   = "Allow"
+        Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
+      }
+    ]
+  })
+}
+
+# Attach IAM Policy to KMS Role
+resource "aws_iam_policy_attachment" "kms_policy_attachment" {
+  name       = "${var.kms_role}_policy_attachment"
+  roles      = [aws_iam_role.kms.name]
+  policy_arn = aws_iam_policy.kms_policy.arn
+}
+
