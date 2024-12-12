@@ -1,3 +1,4 @@
+# IAM Role for EC2 Instances
 resource "aws_iam_role" "iam_role" {
   name = var.role_name
   assume_role_policy = jsonencode({
@@ -18,7 +19,7 @@ resource "aws_iam_role" "iam_role" {
   }
 }
 
-# Creating IAM Policy for Role
+# IAM Policy for EC2 Role
 resource "aws_iam_policy" "iam_policy" {
   name   = var.iam_policy
   policy = jsonencode({
@@ -36,35 +37,36 @@ resource "aws_iam_policy" "iam_policy" {
         Resource = "*"
       },
       {
-        Action   = [
-          "kms:DescribeKey",
-          "kms:Encrypt",
-          "kms:Decrypt",
-          "kms:ReEncrypt*",
-          "kms:GenerateDataKey",
-          "kms:GenerateDataKeyWithoutPlaintext"
+        # Grant permissions for KMS key operations
+        Action = [
+          "kms:DescribeKey",      # Permission to describe the KMS key
+          "kms:Encrypt",          # Encrypt data
+          "kms:Decrypt",          # Decrypt data
+          "kms:ReEncrypt*",       # Re-encrypt data
+          "kms:GenerateDataKey",  # Generate a new data key
+          "kms:GenerateDataKeyWithoutPlaintext"  # Generate a data key without plaintext
         ]
         Effect   = "Allow"
-        Resource = var.kms_key_arn  # Referencing KMS key ARN
+        Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
       }
     ]
   })
 }
 
-# Attaching Policy and Role
+# Attach IAM Policy to Role
 resource "aws_iam_policy_attachment" "policy_attachment" {
   name       = "${var.role_name}_attachment"
   roles      = [aws_iam_role.iam_role.name]
   policy_arn = aws_iam_policy.iam_policy.arn
 }
 
-# Creating Instance Profile
+# IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "my_instance_profile" {
   name = "${var.role_name}_instance_profile"
   role = aws_iam_role.iam_role.name
 }
 
-# Creating KMS Role (same as existing code)
+# Additional IAM Role for KMS Administration
 resource "aws_iam_role" "kms" {
   name = var.kms_role
   assume_role_policy = jsonencode({
