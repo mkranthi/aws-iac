@@ -19,7 +19,7 @@ resource "aws_iam_role" "iam_role" {
   }
 }
 
-# IAM Policy for EC2 Role
+# IAM Policy for EC2 Role (Including KMS Permissions)
 resource "aws_iam_policy" "iam_policy" {
   name   = var.iam_policy
   policy = jsonencode({
@@ -37,15 +37,15 @@ resource "aws_iam_policy" "iam_policy" {
         Resource = "*"
       },
       {
-        # Grant permissions for KMS key operations
         Action = [
-          "kms:DescribeKey",     
-          "kms:Encrypt",          
+          "kms:DescribeKey",
+          "kms:Encrypt",
           "kms:Decrypt",
-          "kms:ReEncrypt*",       
-          "kms:GenerateDataKey",  
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey",
           "kms:GenerateDataKeyWithoutPlaintext",
-          "kms:EnableKeyRotation"  # This was added for EC2 Role permissions
+          "kms:EnableKeyRotation",  # EC2 role needs permission to enable key rotation
+          "kms:ListAliases"         # Allow EC2 to list key aliases if needed
         ]
         Effect   = "Allow"
         Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
@@ -66,54 +66,3 @@ resource "aws_iam_instance_profile" "my_instance_profile" {
   name = "${var.role_name}_instance_profile"
   role = aws_iam_role.iam_role.name
 }
-
-# Additional IAM Role for KMS Administration
-resource "aws_iam_role" "kms" {
-  name = var.kms_role
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Action   = "sts:AssumeRole"
-      }
-    ]
-  })
-
-  tags = {
-    Name = var.kms_role
-  }
-}
-
-# IAM Policy for KMS Role
-resource "aws_iam_policy" "kms_policy" {
-  name   = "${var.kms_role}_policy"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "kms:EnableKeyRotation",
-          "kms:DescribeKey",
-          "kms:ListAliases",
-          "kms:PutKeyPolicy",
-          "kms:CreateKey",
-          "kms:ScheduleKeyDeletion"
-        ]
-        Effect   = "Allow"
-        Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
-      }
-    ]
-  })
-}
-
-# Attach IAM Policy to KMS Role
-resource "aws_iam_policy_attachment" "kms_policy_attachment" {
-  name       = "${var.kms_role}_policy_attachment"
-  roles      = [aws_iam_role.kms.name]
-  policy_arn = aws_iam_policy.kms_policy.arn
-}
-

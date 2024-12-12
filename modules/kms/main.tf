@@ -1,4 +1,3 @@
-data "aws_caller_identity" "current" {}
 resource "aws_kms_key" "dev_kms_key" {
   description             = "Creating a Terraform KMS key for the new module"
   deletion_window_in_days = var.deletion_window_in_days
@@ -37,8 +36,8 @@ resource "aws_kms_key" "dev_kms_key" {
           "kms:Delete*",
           "kms:ScheduleKeyDeletion",
           "kms:CancelKeyDeletion",
-          "kms:EnableKeyRotation",  # **Ensure this is included**
-          "kms:DescribeKey"         # **Ensure this is included**
+          "kms:EnableKeyRotation",  # Add this to enable key rotation
+          "kms:DescribeKey"
         ],
         Resource = "*"
       },
