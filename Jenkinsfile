@@ -44,6 +44,16 @@ pipeline {
                 """
             }
         }
+        stage('Terraform Refresh') {
+            when {
+                expression { params.ACTION in ['PLAN', 'APPLY'] }
+            }
+            steps {
+                sh """
+                    terraform refresh -var-file=${env.VAR_FILE}
+                """
+            }
+        }
 
         stage('Terraform Plan') {
             when {
