@@ -54,6 +54,7 @@ resource "aws_kms_key" "dev_kms_key" {
           "kms:Decrypt",
           "kms:ReEncrypt*",
           "kms:GenerateDataKey",
+          "kms:EnableKeyRotation",
           "kms:GenerateDataKeyWithoutPlaintext"
         ],
         Resource = "*"
