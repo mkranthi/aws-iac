@@ -40,8 +40,8 @@ module "ec2" {
   d_name                 = var.d_name
   volumename             = var.volumename
   vpc_id                 = var.vpc_id
-    security_group_name  = var.security_group_name
-    to_port              = var.to_port
-    from_port            = var.from_port
-    ip_protocol          = var.ip_protocol
+  security_group_name  = var.security_group_name
+  to_port              = var.to_port
+  from_port            = var.from_port
+  ip_protocol          = var.ip_protocol
 }
