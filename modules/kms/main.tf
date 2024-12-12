@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 resource "aws_kms_key" "dev_kms_key" {
   description             = "Creating a Terraform KMS key for the new module"
   deletion_window_in_days = var.deletion_window_in_days
