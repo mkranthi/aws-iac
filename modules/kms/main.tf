@@ -37,7 +37,7 @@ resource "aws_kms_key" "dev_kms_key" {
           "kms:Delete*",
           "kms:ScheduleKeyDeletion",
           "kms:CancelKeyDeletion",
-          "kms:EnableKeyRotation",  # Add this to enable key rotation
+          "kms:EnableKeyRotation",
           "kms:DescribeKey"
         ],
         Resource = "*"

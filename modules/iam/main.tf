@@ -40,12 +40,23 @@ resource "aws_iam_policy" "iam_policy" {
         # Grant permissions for KMS key operations
         Action = [
           "kms:DescribeKey",
+          "kms:CreateKey",
           "kms:Encrypt",
           "kms:Decrypt",
           "kms:ReEncrypt*",
           "kms:GenerateDataKey",
           "kms:GenerateDataKeyWithoutPlaintext",
-          "kms:EnableKeyRotation"
+          "kms:EnableKeyRotation",
+          "kms:EnableKey",
+          "kms:DisableKey",
+          "kms:ScheduleKeyDeletion",
+          "kms:CancelKeyDeletion",
+          "kms:ListKeys",
+          "kms:GetKeyPolicy",
+          "kms:PutKeyPolicy",
+          "kms:ListAliases",
+          "kms:TagResource",
+          "kms:UntagResource"
         ]
         Effect   = "Allow"
         Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
