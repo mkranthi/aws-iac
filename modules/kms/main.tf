@@ -49,8 +49,6 @@ resource "aws_kms_key" "dev_kms_key" {
         Effect    = "Allow",
         Principal = {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
-
-          
         },
         Action   = [
           "kms:DescribeKey",
