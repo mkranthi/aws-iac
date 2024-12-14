@@ -45,7 +45,7 @@ resource "aws_instance" "terraform_instance" {
 resource "aws_ebs_volume" "ebs_volume" {
   availability_zone = var.avzone
   size              = var.v_size
-  kms_key_id        = module.kms.kms_key_arn
+  kms_key_id        = var.kms_key_arn
   encrypted         = true
   tags = {
     name = var.volumename
