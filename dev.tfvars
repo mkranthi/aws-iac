@@ -19,3 +19,4 @@ from_port                  = 22
 ip_protocol                = "tcp"
 admin_role_name            = "ec2-adminrole"
 admin_user_name            = "kranthi"
+iam_role_name              = "kranti_dev_kms_s3_role"
