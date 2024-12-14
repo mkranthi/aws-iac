@@ -47,7 +47,6 @@ resource "aws_ebs_volume" "ebs_volume" {
   size              = var.v_size
   kms_key_id        = module.kms.kms_key_arn
   encrypted         = true
-
   tags = {
     name = var.volumename
   }
