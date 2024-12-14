@@ -23,6 +23,7 @@ module "kms" {
   iam_role_name           = module.iam.role_name
   admin_role_name         = var.admin_role_name
   admin_user_name         = var.admin_user_name
+  aws_account_id          = var.aws_account_id
 }
 
 module "ec2" {
