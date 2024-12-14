@@ -15,7 +15,3 @@ variable "kms_key_arn" {
   description = "The ARN of the KMS key"
   type        = string
 }
-variable "iam_instance_profile" {
-  description = "instanceprofile name"
-  type        = string  
-}

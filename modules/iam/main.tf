@@ -71,9 +71,11 @@ resource "aws_iam_policy_attachment" "policy_attachment" {
   policy_arn = aws_iam_policy.iam_policy.arn
 }
 
+# IAM Instance Profile for EC2
 resource "aws_iam_instance_profile" "my_instance_profile" {
-  name = "${var.iam_instance_profile}" 
+  name = "${var.role_name}_instance_profile"
   role = aws_iam_role.iam_role.name
+
 }
 
 # Additional IAM Role for KMS Administration
