@@ -1,19 +1,26 @@
+variable "iam_role_name" {
+  description = "The name of the IAM role allowed to use the KMS key"
+  type        = string
+}
+
+variable "admin_role_name" {
+  description = "The name of the IAM role allowed to administer the KMS key"
+  type        = string
+}
+
+variable "admin_user_name" {
+  description = "The name of the IAM user allowed to administer the KMS key"
+  type        = string
+}
+
 variable "deletion_window_in_days" {
+  description = "The number of days before the KMS key is deleted after scheduling deletion"
   type        = number
-  description = "Number of days before the key is deleted after scheduling"
-  default     = 7
+  default     = 30
 }
 
 variable "enable_key_rotation" {
+  description = "Flag to enable automatic rotation of the KMS key"
   type        = bool
-  description = "Flag to enable key rotation"
   default     = true
-}
-
-variable "iam" {
-  description = "IAM details including role_name and kms_role"
-  type = object({
-    role_name = string
-    kms_role  = string
-  })
 }

@@ -12,18 +12,6 @@ variable "iam_policy" {
     type = string
 }
 
-variable "deletion_window_in_days" {
-  description = "Number of days before deleting the key"
-  type        = number
-  default     = 7
-}
-
-variable "enable_key_rotation" {
-  description = "Enable automatic key rotation"
-  type        = bool
-  default     = true
-}
-
 variable "ami" {
   description = "ami id for instance_type"
   type = string
@@ -81,4 +69,30 @@ variable "from_port" {
 variable "ip_protocol" {
     description = "name of protocol"
     type = string
+}
+variable "iam_role_name" {
+  description = "The name of the IAM role allowed to use the KMS key"
+  type        = string
+}
+
+variable "admin_role_name" {
+  description = "The name of the IAM role allowed to administer the KMS key"
+  type        = string
+}
+
+variable "admin_user_name" {
+  description = "The name of the IAM user allowed to administer the KMS key"
+  type        = string
+}
+
+variable "deletion_window_in_days" {
+  description = "The number of days before the KMS key is deleted after scheduling deletion"
+  type        = number
+  default     = 30
+}
+
+variable "enable_key_rotation" {
+  description = "Flag to enable automatic rotation of the KMS key"
+  type        = bool
+  default     = true
 }

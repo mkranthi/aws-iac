@@ -17,3 +17,5 @@ security_group_name        = "terraform_dev1_kms_sg"
 to_port                    = 22
 from_port                  = 22
 ip_protocol                = "tcp"
+admin_role_name         = "ec2-adminrole"
+admin_user_name         = "kranthi"

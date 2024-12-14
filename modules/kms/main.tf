@@ -1,4 +1,3 @@
-data "aws_caller_identity" "current" {}
 resource "aws_kms_key" "dev_kms_key" {
   description             = "Creating a Terraform KMS key for the new module"
   deletion_window_in_days = var.deletion_window_in_days
@@ -12,7 +11,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Enable IAM User Permissions",
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
+          AWS = "arn:aws:iam:::role/${var.iam_role_name}"
         },
         Action   = "kms:*",
         Resource = "*"
@@ -21,7 +20,10 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow administration of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.kms_role}"
+          AWS = [
+            "arn:aws:iam:::role/${var.admin_role_name}",
+            "arn:aws:iam:::user/${var.admin_user_name}"
+          ]
         },
         Action   = [
           "kms:ReplicateKey",
@@ -46,7 +48,8 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow use of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
+          AWS = "arn:aws:iam:::role/${var.iam_role_name}"
+          
         },
         Action   = [
           "kms:DescribeKey",
@@ -63,21 +66,9 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow key administration by root account", 
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          AWS = "arn:aws:iam:::root"
         },
         Action   = "kms:PutKeyPolicy", 
-        Resource = "*"
-      },
-      {
-        Sid       = "Allow KMS key usage for EC2 encryption",
-        Effect    = "Allow",
-        Principal = {
-          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.iam.role_name}"
-        },
-        Action   = [ 
-          "kms:Decrypt",
-          "kms:GenerateDataKey"
-        ],
         Resource = "*"
       }
     ]

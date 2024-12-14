@@ -20,11 +20,9 @@ module "kms" {
   source                  = "./modules/kms"
   deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
-  iam = {
-    role_name = module.iam.role_name
-    kms_role  = module.iam.kms_role
-  }
-
+  iam_role_name           = module.iam.role_name
+  admin_role_name         = var.admin_role_name
+  admin_user_name         = var.admin_user_name
 }
 
 module "ec2" {
