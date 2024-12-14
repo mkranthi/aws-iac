@@ -46,6 +46,7 @@ resource "aws_ebs_volume" "ebs_volume" {
   availability_zone = var.avzone
   size              = var.v_size
   kms_key_id        = var.kms_key_arn
+  encrypted         = true
 
   tags = {
     name = var.volumename
