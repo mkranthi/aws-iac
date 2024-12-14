@@ -8,14 +8,7 @@ terraform {
   }
 }
 
-module "iam" {
-  source = "./modules/iam"
-  role_name  = var.role_name
-  iam_policy = var.iam_policy
-  kms_role = var.kms_role
-  kms_key_arn = module.kms.kms_key_arn
-}
-
+# First declare the KMS module
 module "kms" {
   source                  = "./modules/kms"
   deletion_window_in_days = var.deletion_window_in_days
@@ -26,6 +19,16 @@ module "kms" {
   aws_account_id          = var.aws_account_id
 }
 
+# Then declare the IAM module
+module "iam" {
+  source = "./modules/iam"
+  role_name  = var.role_name
+  iam_policy = var.iam_policy
+  kms_role = var.kms_role
+  kms_key_arn = module.kms.kms_key_arn  # This should work after the KMS module is defined
+}
+
+# Declare the EC2 module last, after IAM and KMS
 module "ec2" {
   source                 = "./modules/ec2"
   instance_type          = var.instance_type
@@ -33,14 +36,14 @@ module "ec2" {
   key_name               = var.key_name
   ami                    = var.ami
   iam_instance_profile   = module.iam.iam_instance_profile_name
-  kms_key_arn            = module.kms.kms_key_arn
+  kms_key_arn            = module.kms.kms_key_arn  # This should work as well after KMS is defined
   avzone                 = var.avzone
   v_size                 = var.v_size
   d_name                 = var.d_name
   volumename             = var.volumename
   vpc_id                 = var.vpc_id
-  security_group_name  = var.security_group_name
-  to_port              = var.to_port
-  from_port            = var.from_port
-  ip_protocol          = var.ip_protocol
+  security_group_name    = var.security_group_name
+  to_port                = var.to_port
+  from_port              = var.from_port
+  ip_protocol            = var.ip_protocol
 }
