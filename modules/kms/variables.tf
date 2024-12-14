@@ -24,3 +24,7 @@ variable "enable_key_rotation" {
   type        = bool
   default     = true
 }
+variable "aws_account_id" {
+  description = "AWS Account ID"
+  type        = string
+}

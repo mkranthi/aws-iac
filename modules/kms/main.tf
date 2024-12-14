@@ -11,7 +11,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Enable IAM User Permissions",
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam:::role/${var.iam_role_name}"
+          AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
         },
         Action   = "kms:*",
         Resource = "*"
@@ -21,8 +21,8 @@ resource "aws_kms_key" "dev_kms_key" {
         Effect    = "Allow",
         Principal = {
           AWS = [
-            "arn:aws:iam:::role/${var.admin_role_name}",
-            "arn:aws:iam:::user/${var.admin_user_name}"
+            "arn:aws:iam::${var.aws_account_id}:role/${var.admin_role_name}",
+           "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}"
           ]
         },
         Action   = [
@@ -48,7 +48,8 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow use of the key",
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam:::role/${var.iam_role_name}"
+          AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
+
           
         },
         Action   = [
@@ -66,7 +67,7 @@ resource "aws_kms_key" "dev_kms_key" {
         Sid       = "Allow key administration by root account", 
         Effect    = "Allow",
         Principal = {
-          AWS = "arn:aws:iam:::root"
+          AWS = "arn:aws:iam::${var.aws_account_id}:root"
         },
         Action   = "kms:PutKeyPolicy", 
         Resource = "*"
