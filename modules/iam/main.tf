@@ -67,7 +67,7 @@ resource "aws_iam_policy" "iam_policy" {
 # Attach IAM Policy to Role
 resource "aws_iam_policy_attachment" "policy_attachment" {
   name       = "${var.role_name}_attachment"
-  roles      = aws_iam_role.iam_role.name 
+  roles      = [aws_iam_role.iam_role.name]
   policy_arn = aws_iam_policy.iam_policy.arn
 }
 
