@@ -1,5 +1,4 @@
 role_name                  = "kranti_dev_kms_s3_role"
-kms_role                   = "kms_admin_role"
 iam_policy                 = "dev_kms_s3_role_policy"
 deletion_window_in_days    = 10
 enable_key_rotation        = true

@@ -24,7 +24,6 @@ module "iam" {
   source = "./modules/iam"
   role_name  = var.role_name
   iam_policy = var.iam_policy
-  kms_role = var.kms_role
   kms_key_arn = module.kms.kms_key_arn  # This should work after the KMS module is defined
 }
 
