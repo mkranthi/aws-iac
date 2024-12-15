@@ -67,7 +67,7 @@ resource "aws_iam_policy" "iam_policy" {
 # Attach IAM Policy to Role
 resource "aws_iam_policy_attachment" "policy_attachment" {
   name       = "${var.role_name}_attachment"
-  roles      = [aws_iam_role.iam_role.name]
+  roles      = aws_iam_role.iam_role.name 
   policy_arn = aws_iam_policy.iam_policy.arn
 }
 
@@ -75,26 +75,4 @@ resource "aws_iam_policy_attachment" "policy_attachment" {
 resource "aws_iam_instance_profile" "my_instance_profile" {
   name = "${var.role_name}_instance_profile"
   role = aws_iam_role.iam_role.name
-
-}
-
-# Additional IAM Role for KMS Administration
-resource "aws_iam_role" "kms" {
-  name = var.kms_role
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect    = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Action   = "sts:AssumeRole"
-      }
-    ]
-  })
-
-  tags = {
-    Name = var.kms_role
-  }
 }
