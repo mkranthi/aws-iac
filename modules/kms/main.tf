@@ -40,7 +40,8 @@ resource "aws_kms_key" "dev_kms_key" {
           "kms:ScheduleKeyDeletion",
           "kms:CancelKeyDeletion",
           "kms:EnableKeyRotation",
-          "kms:DescribeKey"
+          "kms:DescribeKey",
+          "kms:GenerateDataKeyWithoutPlaintext"
         ],
         Resource = "*"
       },
