@@ -1,7 +1,6 @@
 role_name                  = "kranti_dev1_kms_s3_role"
 kms_role                   = "kms_dev1_admin_role"
 iam_policy                 = "dev1_kms_role_policy"
-deletion_window_in_days    = 10
 enable_key_rotation        = true
 ami                        = "ami-02bf8ce06a8ed6092"
 instance_type              = "t2.micro"

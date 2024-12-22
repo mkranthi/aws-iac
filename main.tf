@@ -11,7 +11,6 @@ terraform {
 # First declare the KMS module
 module "kms" {
   source                  = "./modules/kms"
-  deletion_window_in_days = var.deletion_window_in_days
   enable_key_rotation     = var.enable_key_rotation
   iam_role_name           = module.iam.role_name
   admin_role_name         = var.admin_role_name

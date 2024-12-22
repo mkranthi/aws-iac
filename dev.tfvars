@@ -1,6 +1,5 @@
 role_name                  = "kranti_dev_kms_s3_role"
 iam_policy                 = "dev_kms_s3_role_policy"
-deletion_window_in_days    = 10
 enable_key_rotation        = true
 ami                        = "ami-02bf8ce06a8ed6092"
 instance_type              = "t2.micro"
