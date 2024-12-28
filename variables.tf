@@ -100,11 +100,6 @@ variable "s3_kms_key_name" {
   description = "s3_kms_key_name"
   type        = string
 }
-variable "kms_key_id" {
-  description = "KMS key id"
-  type        = string
-}
-
 variable "s3_kms_key_arn" {
   description = "KMS key arn"
   type        = string
