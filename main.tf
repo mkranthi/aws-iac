@@ -16,6 +16,7 @@ module "kms" {
   admin_role_name         = var.admin_role_name
   admin_user_name         = var.admin_user_name
   aws_account_id          = var.aws_account_id
+  
 }
 
 # Then declare the IAM module
@@ -23,7 +24,7 @@ module "iam" {
   source = "./modules/iam"
   role_name  = var.role_name
   iam_policy = var.iam_policy
-  kms_key_arn = module.kms.kms_key_arn  # This should work after the KMS module is defined
+  kms_key_arn = module.kms.ebs_kms_key_arn 
 }
 
 # Declare the EC2 module last, after IAM and KMS
@@ -34,7 +35,7 @@ module "ec2" {
   key_name               = var.key_name
   ami                    = var.ami
   iam_instance_profile   = module.iam.iam_instance_profile_name
-  kms_key_arn            = module.kms.kms_key_arn  # This should work as well after KMS is defined
+  kms_key_arn            = module.kms.ebs_kms_key_arn
   avzone                 = var.avzone
   v_size                 = var.v_size
   d_name                 = var.d_name
@@ -44,4 +45,10 @@ module "ec2" {
   to_port                = var.to_port
   from_port              = var.from_port
   ip_protocol            = var.ip_protocol
+}
+
+module "s3" {
+  source = "./modules/s3"
+  bucket_name = var.bucket_name
+  kms_key_arn = module.kms.s3_kms_key_arn
 }

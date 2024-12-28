@@ -89,3 +89,7 @@ variable "aws_account_id" {
   description = "AWS Account ID"
   type        = string
 }
+variable "bucket_name" {
+  description = "second bucket name"
+  type        = string
+}

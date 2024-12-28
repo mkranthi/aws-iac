@@ -8,5 +8,5 @@ output "ebs_kms_key_arn" {
 }
 output "s3_kms_key_arn" {
   description = "ARN of the S3 KMS key"
-  value       = aws_kms_key.s3_kms_key.arn
+  value = aws_kms_key.s3_kms_key.arn
 }
