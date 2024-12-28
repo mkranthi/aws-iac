@@ -59,7 +59,7 @@ resource "aws_iam_policy" "iam_policy" {
           "kms:UntagResource"
         ]
         Effect   = "Allow"
-        Resource = var.kms_key_arn  # Dynamically referencing KMS key ARN
+        Resource = var.kms_key_arn
       }
     ]
   })

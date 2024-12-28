@@ -16,8 +16,7 @@ module "ebs_kms" {
   admin_role_name         = var.admin_role_name
   admin_user_name         = var.admin_user_name
   aws_account_id          = var.aws_account_id
-  kms_key_name            = var.kms_key_name 
-  
+  kms_key_name            = var.kms_key_name  
 }
 
 # Then declare the IAM module
@@ -25,7 +24,7 @@ module "iam" {
   source = "./modules/iam"
   role_name  = var.role_name
   iam_policy = var.iam_policy
-  kms_key_arn = module.kms.kms_key_arn 
+  kms_key_arn = module.kms.kms_key_arn
 }
 
 # Declare the EC2 module last, after IAM and KMS
