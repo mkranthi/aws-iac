@@ -9,13 +9,14 @@ terraform {
 }
 
 # First declare the KMS module
-module "kms" {
+module "ebs_kms" {
   source                  = "./modules/kms"
   enable_key_rotation     = var.enable_key_rotation
   iam_role_name           = module.iam.role_name
   admin_role_name         = var.admin_role_name
   admin_user_name         = var.admin_user_name
   aws_account_id          = var.aws_account_id
+  kms_key_name            = var.kms_key_name 
   
 }
 
@@ -47,8 +48,21 @@ module "ec2" {
   ip_protocol            = var.ip_protocol
 }
 
-module "s3" {
+
+/*module "s3" {
   source = "./modules/s3"
   bucket_name = var.bucket_name
   kms_key_arn = module.kms.s3_kms_key_arn
 }
+
+
+module "s3_kms" {
+  source                  = "./modules/kms"
+  kms_key_name            = var.kms_key_name
+  enable_key_rotation     = var.enable_key_rotation
+  iam_role_name           = module.iam.role_name
+  admin_role_name         = var.admin_role_name
+  admin_user_name         = var.admin_user_name
+  aws_account_id          = var.aws_account_id
+}
+*/
