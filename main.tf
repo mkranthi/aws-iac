@@ -24,7 +24,7 @@ module "iam" {
   source = "./modules/iam"
   role_name  = var.role_name
   iam_policy = var.iam_policy
-  kms_key_arn = module.kms.kms_key_arn
+  kms_key_arn = module.ebs_kms.kms_key_arn
 }
 
 # Declare the EC2 module last, after IAM and KMS

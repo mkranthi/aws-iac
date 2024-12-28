@@ -23,6 +23,6 @@ variable "aws_account_id" {
   type        = string
 }
 variable "kms_key_name" {
-  description = "kms_key name"
+  description = "kms_key_name"
   type        = string
 }
