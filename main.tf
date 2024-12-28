@@ -26,7 +26,6 @@ module "iam" {
   iam_policy = var.iam_policy
   kms_key_arn = module.ebs_kms.kms_key_arn
 }
-
 # Declare the EC2 module last, after IAM and KMS
 module "ec2" {
   source                 = "./modules/ec2"
@@ -48,20 +47,19 @@ module "ec2" {
 }
 
 
-/*module "s3" {
-  source = "./modules/s3"
-  bucket_name = var.bucket_name
-  kms_key_arn = module.kms.s3_kms_key_arn
+module "s3" {
+  source                 = "./modules/s3"
+  bucket_name            = var.bucket_name
+  s3_kms_key_arn            = module.s3_kms.kms_key_arn
 }
 
 
 module "s3_kms" {
   source                  = "./modules/kms"
-  kms_key_name            = var.kms_key_name
+  kms_key_name            = var.s3_kms_key_name
   enable_key_rotation     = var.enable_key_rotation
   iam_role_name           = module.iam.role_name
   admin_role_name         = var.admin_role_name
   admin_user_name         = var.admin_user_name
   aws_account_id          = var.aws_account_id
 }
-*/
