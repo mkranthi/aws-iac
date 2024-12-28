@@ -6,7 +6,6 @@ variable "iam_policy" {
     description = "policy give access to s3 bucket"
     type = string
 }
-
 variable "ami" {
   description = "ami id for instance_type"
   type = string
