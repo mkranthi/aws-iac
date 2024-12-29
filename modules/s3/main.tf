@@ -24,15 +24,25 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
         Effect    = "Allow"
         Principal = {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
-        },
+        }
         Action    = [
-          "s3:ListBucket",
-          "s3:DeleteBucket",
-          "s3:GetObject",
-          "s3:PutBucketPolicy",
-          "s3:PutBucketEncryption" 
+          "s3:ListBucket",         # Allows listing objects in the bucket
+          "s3:DeleteBucket",       # Allows deleting the bucket
+          "s3:PutBucketPolicy",    # Allows putting the bucket policy
+          "s3:PutBucketEncryption" # Allows modifying the bucket encryption settings
         ]
-        Resource  = "${aws_s3_bucket.mybucket.arn}"
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"  # Bucket ARN
+      },
+      {
+        Sid       = "AllowObjectActions"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = [
+          "s3:PutObject",   # Allows uploading objects
+          "s3:GetObject",   # Allows downloading objects
+          "s3:DeleteObject" # Allows deleting objects
+        ]
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"  # Object ARN (everything inside the bucket)
       }
     ]
   })
