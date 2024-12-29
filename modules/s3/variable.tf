@@ -20,7 +20,6 @@ variable "admin_user_name" {
   description = "The name of the IAM user allowed to administer the KMS key"
   type        = string
 }
-
 variable "aws_account_id" {
   description = "AWS Account ID"
   type        = string
