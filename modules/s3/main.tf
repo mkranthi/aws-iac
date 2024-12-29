@@ -26,14 +26,16 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
         }
         Action    = [
-          "s3:*" 
+          "s3:ListBucket"
         ]
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"
       },
       {
         Sid       = "AllowObjectActions"
         Effect    = "Allow"
-        Principal = "*"
+        Principal = {
+          AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
+        }
         Action    = [
           "s3:PutObject",
           "s3:GetObject",
