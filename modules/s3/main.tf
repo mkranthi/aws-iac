@@ -29,7 +29,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:ListBucket",
           "s3:DeleteBucket",
           "s3:GetObject",
-          "s3:PutBucketPolicy"
+          "s3:PutBucketPolicy",
+          "s3:PutBucketEncryption" 
         ]
         Resource  = "${aws_s3_bucket.mybucket.arn}"
       }
