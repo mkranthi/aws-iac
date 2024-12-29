@@ -26,10 +26,9 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
         }
         Action    = [
-          "s3:ListBucket",         # Allows listing objects in the bucket
-          "s3:DeleteBucket",       # Allows deleting the bucket
-          "s3:PutBucketPolicy",    # Allows putting the bucket policy
-          "s3:PutBucketEncryption" # Allows modifying the bucket encryption settings
+          "s3:ListBucket",         # List objects in the bucket
+          "s3:PutBucketPolicy",    # Put the bucket policy
+          "s3:PutBucketEncryption" # Put encryption settings on the bucket
         ]
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"  # Bucket ARN
       },
