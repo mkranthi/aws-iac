@@ -26,7 +26,7 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
         }
         Action    = [
-          "s3:ListBucket"
+          "s3:*" 
         ]
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"
       },
