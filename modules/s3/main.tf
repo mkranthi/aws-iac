@@ -26,9 +26,7 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
         }
         Action    = [
-          "s3:ListBucket",
-          "s3:PutBucketPolicy",
-          "s3:PutBucketEncryption"
+          "s3:ListBucket"
         ]
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"
       },
@@ -38,7 +36,6 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
         Principal = "*"
         Action    = [
           "s3:PutObject",
-          "s3:ListBucket",
           "s3:GetObject",
           "s3:DeleteObject"
         ]
