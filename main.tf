@@ -48,9 +48,13 @@ module "ec2" {
 
 
 module "s3" {
-  source                 = "./modules/s3"
-  bucket_name            = var.bucket_name
-  s3_kms_key_arn            = module.s3_kms.kms_key_arn
+  source                  = "./modules/s3"
+  bucket_name             = var.bucket_name
+  s3_kms_key_arn          = module.s3_kms.kms_key_arn
+  aws_account_id          = var.aws_account_id
+  iam_role_name           = module.iam.role_name
+  admin_role_name         = var.admin_role_name
+  admin_user_name         = var.admin_user_name
 }
 
 
