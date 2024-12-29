@@ -12,3 +12,27 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
     }
   }
 }
+
+resource "aws_s3_bucket_policy" "mybucket_policy" {
+  bucket = var.bucket_name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "BucketAccess"
+        Effect    = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
+        },
+        Action    = [
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:GetObject"
+        ]
+        Resource  = var.bucket_name
+      }
+    ]
+  })
+}
