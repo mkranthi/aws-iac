@@ -31,7 +31,7 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject",
           "s3:GetObject"
         ]
-        Resource  = "arn:aws:s3:::kranti-dev-bucket-for-kms-123456"
+        Resource  = "${aws_s3_bucket.mybucket.arn}"
       }
     ]
   })
