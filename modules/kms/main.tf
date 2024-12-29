@@ -43,6 +43,7 @@ resource "aws_kms_key" "kms_key" {
           "kms:DescribeKey",
           "kms:Encrypt",
           "kms:Decrypt",
+          "kms:GenerateDataKey",
           "kms:GenerateDataKeyWithoutPlaintext"
         ],
         Resource = "*"
