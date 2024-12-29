@@ -14,7 +14,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
 }
 
 resource "aws_s3_bucket_policy" "mybucket_policy" {
-  bucket = var.bucket_name
+  bucket = aws_s3_bucket.mybucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
