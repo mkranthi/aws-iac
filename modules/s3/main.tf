@@ -10,9 +10,9 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
         Effect    = "Allow"
         Principal = {
           AWS = [
-            "arn:aws:iam::${var.aws_account_id}:role/${var.admin_role_name}",
-           "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
-           "arn:aws:iam::${var.aws_account_id}:user/${var.admin_role_name}"
+            "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}",
+            "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
+            "arn:aws:iam::${var.aws_account_id}:user/${var.admin_role_name}"
           ]
         },
         Action    = [
@@ -22,8 +22,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}",
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}/*"
         ]
       },
       # Deny all other users from accessing the bucket
@@ -38,8 +38,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}",
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}/*"
         ]
         Condition = {
           StringNotEquals = {
