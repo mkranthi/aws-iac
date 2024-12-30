@@ -22,8 +22,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}/*"
+          "arn:aws:s3:::${var.bucket_name}",
+          "arn:aws:s3:::${var.bucket_name}/*"
         ]
       },
       # Deny all other users from accessing the bucket
@@ -38,8 +38,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}/*"
+          "arn:aws:s3:::${var.bucket_name}",
+          "arn:aws:s3:::${var.bucket_name}/*"
         ]
         Condition = {
           StringNotEquals = {
