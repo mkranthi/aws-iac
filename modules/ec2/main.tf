@@ -12,14 +12,7 @@ resource "aws_security_group" "terraform-sg" {
     tags = {
       Name = var.security_group_name
     }
-  ingress {
-    description      = "Allow SSH"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"] # Allows SSH from anywhere (use cautiously)
-  }
-
+    
   ingress {
     description      = "Allow HTTP"
     from_port        = 80
