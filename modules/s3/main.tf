@@ -19,39 +19,6 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # Allow specific IAM role or user to access the bucket and objects
-      {
-        Sid       = "AllowSpecificRoleOrUser"
-        Effect    = "Allow"
-        Principal = {
-          AWS = [
-            "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
-          ]
-        }
-        Action    = [
-          "s3:ListBucket"
-        ]
-        Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"
-      },
-      {
-        Sid       = "AllowObjectAccess"
-        Effect    = "Allow"
-        Principal = {
-          AWS = [
-            "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}"
-          ]
-        }
-        Action    = [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:DeleteObject"
-        ]
-        Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"
-        ]
-      },
-
       # Deny all other users and roles from accessing the bucket
       {
         Sid       = "DenyOtherUsers"
@@ -71,7 +38,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           StringNotEquals = {
             "aws:PrincipalArn": [
               "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}",
-              "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}"
+              "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
+              "arn:aws:iam::${var.aws_account_id}:user/${var.admin_role_name}"
             ]
           }
         }
