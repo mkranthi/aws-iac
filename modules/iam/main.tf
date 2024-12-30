@@ -31,7 +31,8 @@ resource "aws_iam_policy" "iam_policy" {
           "s3:ListAllMyBuckets",
           "s3:PutObject",
           "s3:GetObject",
-          "s3:DeleteObject"
+          "s3:DeleteObject",
+          "s3:HeadBucket"
         ]
         Effect   = "Allow"
         Resource = "*"
