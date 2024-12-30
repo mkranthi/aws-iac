@@ -31,8 +31,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}",
-          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}",
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket.id}/*"
         ]
         Condition = {
           StringNotEquals = {
