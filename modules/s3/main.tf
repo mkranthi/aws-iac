@@ -1,12 +1,12 @@
 resource "aws_s3_bucket_policy" "mybucket_policy" {
-  bucket = aws_s3_bucket.mybucket.bucket
+  bucket = aws_s3_bucket.mybucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # Allow all users and roles to access
+      # Allow specific roles and users to access the bucket
       {
-        Sid       = "AllowSpecificRoleOrUser"
+        Sid       = "AllowSpecificUsers"
         Effect    = "Allow"
         Principal = {
           AWS = [
@@ -14,7 +14,7 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
             "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
             "arn:aws:iam::${var.aws_account_id}:user/${var.admin_role_name}"
           ]
-        },
+        }
         Action    = [
           "s3:ListBucket",
           "s3:GetObject",
@@ -22,11 +22,11 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${var.bucket_name}",
-          "arn:aws:s3:::${var.bucket_name}/*"
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.id}",
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.id}/*"
         ]
       },
-      # Deny all other users from accessing the bucket
+      # Deny access to everyone else
       {
         Sid       = "DenyOtherUsers"
         Effect    = "Deny"
@@ -38,8 +38,8 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           "s3:DeleteObject"
         ]
         Resource = [
-          "arn:aws:s3:::${var.bucket_name}",
-          "arn:aws:s3:::${var.bucket_name}/*"
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.id}",
+          "arn:aws:s3:::${aws_s3_bucket.mybucket.id}/*"
         ]
         Condition = {
           StringNotEquals = {
