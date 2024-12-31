@@ -26,13 +26,12 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
         Principal = {
           AWS = [
             "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}",
-            "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
+            #"arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
             "arn:aws:iam::${var.aws_account_id}:role/${var.admin_role_name}"
           ]
         }
         Action    = [
-          "s3:ListBucket",
-          "s3:GetObject"
+          "s3:ListBucket"
         ]
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}"
       },
