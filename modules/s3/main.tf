@@ -72,7 +72,7 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
           StringNotEquals = {
             "aws:PrincipalArn": [
               "arn:aws:iam::${var.aws_account_id}:role/${var.iam_role_name}",
-              "arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
+              #"arn:aws:iam::${var.aws_account_id}:user/${var.admin_user_name}",
               "arn:aws:iam::${var.aws_account_id}:user/${var.admin_role_name}"
             ]
           }
