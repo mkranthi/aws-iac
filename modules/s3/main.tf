@@ -53,6 +53,22 @@ resource "aws_s3_bucket_policy" "mybucket_policy" {
         Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*"
       },
 
+       # Deny all uploads without KMS encryption
+      {
+        Sid       = "DenyUnencryptedUploads",
+        Effect    = "Deny",
+        Principal = "*",
+        Action    = [
+          "s3:PutObject"
+        ],
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.mybucket.bucket}/*",
+        Condition = {
+          Null = {
+            "s3:x-amz-server-side-encryption-aws-kms-key-id": "true"
+          }
+        }
+      },
+
       # Deny all other users and roles from accessing the bucket
       {
         Sid       = "DenyOtherUsers"
