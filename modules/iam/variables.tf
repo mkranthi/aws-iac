@@ -11,7 +11,3 @@ variable "kms_key_arn" {
   description = "The ARN of the KMS key"
   type        = string
 }
-variable "bucket_name" {
-    description = "s3 Bucket Name"
-    type = string
-}
